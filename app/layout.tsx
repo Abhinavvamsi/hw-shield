@@ -1,6 +1,7 @@
-import Script from "next/script"
 import type { Metadata } from "next"
+import Script from "next/script"
 import "./globals.css"
+
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
@@ -13,18 +14,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
 
       <body>
+
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="beforeInteractive"
+        />
 
         <ThemeProvider>
 
           {children}
 
         </ThemeProvider>
-
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
       </body>
 

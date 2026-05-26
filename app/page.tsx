@@ -1,30 +1,59 @@
 "use client"
 
 import ThemeToggle from "@/components/theme-toggle"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useCartStore } from "@/store/cart-store"
 import ProductCard from "@/components/product-card"
-import { products } from "@/data/products"
+
+type Product = {
+  id: string
+  name: string
+  description: string
+  price: number
+  image: string
+  category: string
+}
 
 export default function Home() {
 
   const cart = useCartStore((state) => state.cart)
 
-  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [products, setProducts] = useState<Product[]>([])
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] =
+    useState("All")
+
+  const [mobileMenuOpen, setMobileMenuOpen] =
+    useState(false)
+
+  useEffect(() => {
+
+    async function fetchProducts() {
+
+      const response = await fetch(
+        "/api/get-products"
+      )
+
+      const data = await response.json()
+
+      setProducts(data)
+
+    }
+
+    fetchProducts()
+
+  }, [])
 
   const categories = [
     "All",
-    "Mainline",
-    "Premium",
-    "5 Pack",
-    "Premium 5 Pack",
-    "Team Transport",
-    "Two Pack",
+    ...new Set(
+      products.map(
+        (product) => product.category
+      )
+    ),
   ]
 
   const filteredProducts =
@@ -76,7 +105,9 @@ export default function Home() {
 
             <button
               onClick={() =>
-                setMobileMenuOpen(!mobileMenuOpen)
+                setMobileMenuOpen(
+                  !mobileMenuOpen
+                )
               }
             >
 
@@ -92,7 +123,7 @@ export default function Home() {
 
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown */}
         {mobileMenuOpen && (
 
           <div className="md:hidden border-t border-zinc-800 bg-background px-6 py-6 space-y-6">
@@ -180,7 +211,9 @@ export default function Home() {
 
             <button
               key={category}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() =>
+                setSelectedCategory(category)
+              }
               className={`px-4 md:px-5 py-2 rounded-full border transition text-sm md:text-base ${
                 selectedCategory === category
                   ? "bg-white text-black border-white"
@@ -201,7 +234,7 @@ export default function Home() {
 
             <ProductCard
               key={product.id}
-              id={product.id}
+              id={Number(product.id)}
               name={product.name}
               price={product.price}
               image={product.image}
