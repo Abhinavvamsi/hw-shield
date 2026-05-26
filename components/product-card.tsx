@@ -141,11 +141,12 @@ export default function ProductCard({
                 }
 
                 addToCart({
-                  id,
-                  name,
-                  price,
-                  image,
-                })
+  id,
+  name,
+  price,
+  image,
+  stock,
+})
 
                 router.push("/checkout")
 
