@@ -1,12 +1,14 @@
 "use client"
 
-import ThemeToggle from "@/components/theme-toggle"
 import { useEffect, useState } from "react"
-import Link from "next/link"
-import { Menu, X } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
+
 import { useCartStore } from "@/store/cart-store"
+
 import ProductCard from "@/components/product-card"
+
+import Navbar from "@/components/navbar"
 
 type Product = {
   id: string
@@ -15,31 +17,49 @@ type Product = {
   price: number
   image: string
   category: string
+  stock: number
 }
 
 export default function Home() {
 
-  const cart = useCartStore((state) => state.cart)
+  const syncStock =
+    useCartStore(
+      (state) => state.syncStock
+    )
 
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] =
+    useState<Product[]>([])
 
-  const [selectedCategory, setSelectedCategory] =
-    useState("All")
-
-  const [mobileMenuOpen, setMobileMenuOpen] =
-    useState(false)
+  const [selectedCategory,
+    setSelectedCategory
+  ] = useState("All")
 
   useEffect(() => {
 
     async function fetchProducts() {
 
       const response = await fetch(
-        "/api/get-products"
+        "/api/get-products",
+        {
+          cache: "no-store",
+        }
       )
 
-      const data = await response.json()
+      const data =
+        await response.json()
 
       setProducts(data)
+
+      data.forEach(
+        (product: Product) => {
+
+          syncStock(
+            product.id,
+            product.stock
+          )
+
+        }
+      )
 
     }
 
@@ -48,106 +68,36 @@ export default function Home() {
   }, [])
 
   const categories = [
+
     "All",
+
     ...new Set(
       products.map(
-        (product) => product.category
+        (product) =>
+          product.category
       )
     ),
+
   ]
 
   const filteredProducts =
+
     selectedCategory === "All"
+
       ? products
+
       : products.filter(
           (product) =>
-            product.category === selectedCategory
+            product.category ===
+            selectedCategory
         )
 
   return (
+
     <main className="min-h-screen bg-gradient-to-b from-background via-background to-background text-foreground transition-colors duration-300">
 
-      {/* Navbar */}
-      <nav className="border-b border-zinc-800 sticky top-0 backdrop-blur-xl bg-background/70 z-50">
-
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
-
-          <h1 className="text-2xl font-bold">
-            HW Shield
-          </h1>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-6 text-zinc-300">
-
-            <button className="hover:text-white dark:hover:text-white hover:text-black transition">
-              Shop
-            </button>
-
-            <button className="hover:text-white dark:hover:text-white hover:text-black transition">
-              Collections
-            </button>
-
-            <Link
-              href="/cart"
-              className="hover:text-white dark:hover:text-white hover:text-black transition"
-            >
-              Cart ({cart.length})
-            </Link>
-
-            <ThemeToggle />
-
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
-
-            <ThemeToggle />
-
-            <button
-              onClick={() =>
-                setMobileMenuOpen(
-                  !mobileMenuOpen
-                )
-              }
-            >
-
-              {mobileMenuOpen ? (
-                <X size={28} />
-              ) : (
-                <Menu size={28} />
-              )}
-
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* Mobile Dropdown */}
-        {mobileMenuOpen && (
-
-          <div className="md:hidden border-t border-zinc-800 bg-background px-6 py-6 space-y-6">
-
-            <button className="block text-lg">
-              Shop
-            </button>
-
-            <button className="block text-lg">
-              Collections
-            </button>
-
-            <Link
-              href="/cart"
-              className="block text-lg"
-            >
-              Cart ({cart.length})
-            </Link>
-
-          </div>
-
-        )}
-
-      </nav>
+      {/* Global Navbar */}
+      <Navbar />
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28">
@@ -155,33 +105,55 @@ export default function Home() {
         <div className="max-w-3xl">
 
           <p className="text-zinc-500 uppercase tracking-widest text-sm md:text-base">
+
             Premium Protection
+
           </p>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mt-4">
+
             Protect Your
+
             <span className="text-zinc-500 dark:text-zinc-400">
+
               {" "}Hot Wheels{" "}
+
             </span>
+
             Collection
+
           </h1>
 
           <p className="text-zinc-500 text-base md:text-lg mt-6 max-w-xl leading-relaxed">
+
             Premium acrylic and soft protectors built for collectors who value condition and display quality.
+
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-10">
 
-            <Button className="rounded-xl px-8 py-6 text-lg">
-              Shop Now
-            </Button>
+            <a href="#products">
 
-            <Button
-              variant="outline"
-              className="rounded-xl px-8 py-6 text-lg bg-transparent border-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-900"
-            >
-              View Collection
-            </Button>
+              <Button className="rounded-xl px-8 py-6 text-lg">
+
+                Shop Now
+
+              </Button>
+
+            </a>
+
+            <a href="#products">
+
+              <Button
+                variant="outline"
+                className="rounded-xl px-8 py-6 text-lg bg-transparent border-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-900"
+              >
+
+                View Collection
+
+              </Button>
+
+            </a>
 
           </div>
 
@@ -190,16 +162,23 @@ export default function Home() {
       </section>
 
       {/* Products Section */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
+      <section
+        id="products"
+        className="max-w-7xl mx-auto px-4 md:px-6 pb-20"
+      >
 
         <div className="mb-10">
 
           <p className="text-zinc-500 uppercase tracking-widest text-sm">
+
             Featured Products
+
           </p>
 
           <h2 className="text-3xl md:text-4xl font-bold mt-2">
+
             Collector Favorites
+
           </h2>
 
         </div>
@@ -220,7 +199,9 @@ export default function Home() {
                   : "border-zinc-700 text-zinc-400 hover:border-white hover:text-white dark:hover:text-white"
               }`}
             >
+
               {category}
+
             </button>
 
           ))}
@@ -234,11 +215,12 @@ export default function Home() {
 
             <ProductCard
               key={product.id}
-              id={Number(product.id)}
+              id={product.id}
               name={product.name}
               price={product.price}
               image={product.image}
               description={product.description}
+              stock={product.stock}
             />
 
           ))}
@@ -248,5 +230,7 @@ export default function Home() {
       </section>
 
     </main>
+
   )
+
 }

@@ -8,6 +8,7 @@ datasource db {
 }
 
 model Order {
+  status String @default("Pending")
   id          String   @id @default(cuid())
   customer    String
   email       String

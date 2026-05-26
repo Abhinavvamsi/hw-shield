@@ -1,37 +1,176 @@
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { toast } from "sonner"
 
 type CartItem = {
-  id: number
+  id: string
   name: string
   price: number
   image: string
+  quantity: number
+  stock: number
 }
 
 type CartStore = {
   cart: CartItem[]
 
-  addToCart: (item: CartItem) => void
+  syncStock: (
+    id: string,
+    stock: number
+  ) => void
 
-  removeFromCart: (index: number) => void
+  addToCart: (
+    item: Omit<CartItem, "quantity">
+  ) => void
+
+  increaseQuantity: (
+    id: string
+  ) => void
+
+  decreaseQuantity: (
+    id: string
+  ) => void
+
+  removeFromCart: (
+    id: string
+  ) => void
 
   clearCart: () => void
 }
 
-export const useCartStore = create<CartStore>((set) => ({
-  cart: [],
+export const useCartStore =
+  create<CartStore>()(
+    persist(
+      (set) => ({
 
-  addToCart: (item) =>
-    set((state) => ({
-      cart: [...state.cart, item],
-    })),
+        cart: [],
 
-  removeFromCart: (index) =>
-    set((state) => ({
-      cart: state.cart.filter((_, i) => i !== index),
-    })),
+        syncStock: (
+          id,
+          stock
+        ) =>
 
-  clearCart: () =>
-    set({
-      cart: [],
-    }),
-}))
+          set((state) => ({
+            cart: state.cart.map(
+              (item) =>
+
+                item.id === id
+                  ? {
+                      ...item,
+                      stock,
+                    }
+                  : item
+            ),
+          })),
+
+        addToCart: (item) =>
+
+          set((state) => {
+
+            const existingItem =
+              state.cart.find(
+                (cartItem) =>
+                  cartItem.id === item.id
+              )
+
+            if (existingItem) {
+
+              return {
+                cart: state.cart.map(
+                  (cartItem) =>
+
+                    cartItem.id === item.id
+                      ? {
+                          ...cartItem,
+
+                          quantity:
+                            cartItem.quantity <
+                            cartItem.stock
+                              ? cartItem.quantity + 1
+                              : cartItem.quantity,
+                        }
+
+                      : cartItem
+                ),
+              }
+
+            }
+
+            return {
+              cart: [
+                ...state.cart,
+                {
+                  ...item,
+                  quantity: 1,
+                },
+              ],
+            }
+
+          }),
+
+        increaseQuantity: (id) =>
+
+          set((state) => ({
+            cart: state.cart.map(
+              (item) =>
+
+                item.id === id
+                  ? {
+                      ...item,
+
+                      quantity:
+                        item.quantity <
+                        item.stock
+                          ? item.quantity + 1
+                          : item.quantity,
+                    }
+
+                  : item
+            ),
+          })),
+
+        decreaseQuantity: (id) =>
+
+          set((state) => ({
+            cart: state.cart
+              .map((item) =>
+
+                item.id === id
+                  ? {
+                      ...item,
+
+                      quantity:
+                        item.quantity - 1,
+                    }
+
+                  : item
+              )
+
+              .filter(
+                (item) =>
+                  item.quantity > 0
+              ),
+          })),
+
+        removeFromCart: (id) =>
+
+          set((state) => ({
+            cart: state.cart.filter(
+              (item) =>
+                item.id !== id
+            ),
+          })),
+
+        clearCart: () =>
+
+          set({
+            cart: [],
+          }),
+
+      }),
+
+      {
+        name: "hw-shield-cart",
+      }
+    )
+  )

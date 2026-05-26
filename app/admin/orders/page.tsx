@@ -1,7 +1,29 @@
 export const dynamic = "force-dynamic"
+
 import { prisma } from "@/lib/prisma"
+import OrderStatusSelect from "@/components/order-status-select"
+import { toast } from "sonner"
+
+import {
+  currentUser,
+} from "@clerk/nextjs/server"
+
+import { redirect } from "next/navigation"
 
 export default async function OrdersPage() {
+
+  const user = await currentUser()
+
+  const isAdmin =
+    user?.primaryEmailAddress
+      ?.emailAddress ===
+    "abhinavvamsi2004@gmail.com"
+
+  if (!isAdmin) {
+
+    redirect("/")
+
+  }
 
   const orders = await prisma.order.findMany({
     orderBy: {
@@ -72,6 +94,37 @@ export default async function OrdersPage() {
                       order.createdAt
                     ).toLocaleString()}
                   </p>
+
+                  <div className="mt-6">
+
+                    <span
+                      className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                        order.status === "Pending"
+                          ? "bg-yellow-500/20 text-yellow-400"
+
+                          : order.status === "Packed"
+                          ? "bg-blue-500/20 text-blue-400"
+
+                          : order.status === "Shipped"
+                          ? "bg-purple-500/20 text-purple-400"
+
+                          : order.status === "Delivered"
+                          ? "bg-green-500/20 text-green-400"
+
+                          : "bg-zinc-700 text-white"
+                      }`}
+                    >
+
+                      {order.status}
+
+                    </span>
+
+                  </div>
+
+                  <OrderStatusSelect
+                    orderId={order.id}
+                    currentStatus={order.status}
+                  />
 
                 </div>
 

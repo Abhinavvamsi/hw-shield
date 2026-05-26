@@ -18,19 +18,48 @@ export async function POST(req: Request) {
 
         products: body.products,
 
-        totalAmount: body.totalAmount,
+        totalAmount:
+          body.totalAmount,
 
-        paymentId: body.paymentId,
+        paymentId:
+          body.paymentId,
       },
     })
+
+    // Reduce stock after successful order
+    for (const item of body.products) {
+
+      await prisma.product.update({
+
+        where: {
+          id: item.id,
+        },
+
+        data: {
+
+          stock: {
+            decrement:
+              item.quantity,
+          },
+
+        },
+
+      })
+
+    }
 
     return NextResponse.json(order)
 
   } catch (error) {
 
     return NextResponse.json(
-      { error: "Failed to save order" },
-      { status: 500 }
+      {
+        error:
+          "Failed to save order",
+      },
+      {
+        status: 500,
+      }
     )
 
   }

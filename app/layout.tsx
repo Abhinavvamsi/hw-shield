@@ -1,13 +1,24 @@
 import { ClerkProvider } from "@clerk/nextjs"
+
 import type { Metadata } from "next"
+
 import Script from "next/script"
+
 import "./globals.css"
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "sonner"
+
+import {
+  ThemeProvider,
+} from "@/components/theme-provider"
 
 export const metadata: Metadata = {
+
   title: "HW Shield",
-  description: "Premium Hot Wheels Protectors",
+
+  description:
+    "Premium Hot Wheels Protectors",
+
 }
 
 export default function RootLayout({
@@ -17,6 +28,7 @@ export default function RootLayout({
 }>) {
 
   return (
+
     <html
       lang="en"
       suppressHydrationWarning
@@ -24,23 +36,36 @@ export default function RootLayout({
 
       <body>
 
+        {/* Razorpay */}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"
         />
 
+        {/* Clerk */}
         <ClerkProvider>
 
-  <ThemeProvider>
+          {/* Theme */}
+          <ThemeProvider>
 
-    {children}
+            {/* App */}
+            {children}
 
-  </ThemeProvider>
+            {/* Toasts */}
+            <Toaster
+              position="top-right"
+              richColors
+              closeButton
+            />
 
-</ClerkProvider>
+          </ThemeProvider>
+
+        </ClerkProvider>
 
       </body>
 
     </html>
+
   )
+
 }

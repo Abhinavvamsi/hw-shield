@@ -1,34 +1,113 @@
 "use client"
 
 import { useState } from "react"
+
 import Image from "next/image"
+
+import Navbar from "@/components/navbar"
+
+import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
+
 import { useCartStore } from "@/store/cart-store"
+
+import {
+  RedirectToSignIn,
+  useUser,
+} from "@clerk/nextjs"
 
 export default function CheckoutPage() {
 
-  const cart = useCartStore((state) => state.cart)
+  const cart = useCartStore(
+    (state) => state.cart
+  )
+
+  const { user } = useUser()
+
+  if (!user) {
+    return <RedirectToSignIn />
+  }
 
   const total = cart.reduce(
-    (sum, item) => sum + item.price,
+    (sum, item) =>
+      sum +
+      item.price *
+      item.quantity,
     0
   )
 
-  const [customer, setCustomer] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [address, setAddress] = useState("")
-  const [city, setCity] = useState("")
-  const [pincode, setPincode] = useState("")
+  const [customer,
+    setCustomer
+  ] = useState(
+    user.fullName || ""
+  )
+
+  const [email,
+    setEmail
+  ] = useState(
+    user.primaryEmailAddress
+      ?.emailAddress || ""
+  )
+
+  const [phone,
+    setPhone
+  ] = useState("")
+
+  const [address,
+    setAddress
+  ] = useState("")
+
+  const [city,
+    setCity
+  ] = useState("")
+
+  const [pincode,
+    setPincode
+  ] = useState("")
 
   return (
+
     <main className="min-h-screen bg-background text-foreground">
+
+      {/* Global Navbar */}
+      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-12">
-          Checkout
-        </h1>
+        {/* Heading */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+
+          <div>
+
+            <h1 className="text-4xl md:text-5xl font-bold">
+
+              Checkout
+
+            </h1>
+
+            <p className="text-zinc-500 mt-4">
+
+              Complete your order securely.
+
+            </p>
+
+          </div>
+
+          <Link href="/cart">
+
+            <Button
+              variant="outline"
+              className="rounded-xl"
+            >
+
+              Back to Cart
+
+            </Button>
+
+          </Link>
+
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
 
@@ -38,7 +117,9 @@ export default function CheckoutPage() {
             <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
 
               <h2 className="text-2xl font-bold mb-8">
+
                 Shipping Details
+
               </h2>
 
               <div className="space-y-6">
@@ -48,7 +129,9 @@ export default function CheckoutPage() {
                   placeholder="Full Name"
                   value={customer}
                   onChange={(e) =>
-                    setCustomer(e.target.value)
+                    setCustomer(
+                      e.target.value
+                    )
                   }
                   className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                 />
@@ -58,7 +141,9 @@ export default function CheckoutPage() {
                   placeholder="Email Address"
                   value={email}
                   onChange={(e) =>
-                    setEmail(e.target.value)
+                    setEmail(
+                      e.target.value
+                    )
                   }
                   className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                 />
@@ -68,7 +153,9 @@ export default function CheckoutPage() {
                   placeholder="Phone Number"
                   value={phone}
                   onChange={(e) =>
-                    setPhone(e.target.value)
+                    setPhone(
+                      e.target.value
+                    )
                   }
                   className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                 />
@@ -77,7 +164,9 @@ export default function CheckoutPage() {
                   placeholder="Full Address"
                   value={address}
                   onChange={(e) =>
-                    setAddress(e.target.value)
+                    setAddress(
+                      e.target.value
+                    )
                   }
                   className="w-full rounded-xl bg-black border border-zinc-800 px-4 py-4 outline-none focus:border-white transition min-h-[120px]"
                 />
@@ -89,7 +178,9 @@ export default function CheckoutPage() {
                     placeholder="City"
                     value={city}
                     onChange={(e) =>
-                      setCity(e.target.value)
+                      setCity(
+                        e.target.value
+                      )
                     }
                     className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                   />
@@ -99,7 +190,9 @@ export default function CheckoutPage() {
                     placeholder="Pincode"
                     value={pincode}
                     onChange={(e) =>
-                      setPincode(e.target.value)
+                      setPincode(
+                        e.target.value
+                      )
                     }
                     className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                   />
@@ -118,15 +211,17 @@ export default function CheckoutPage() {
             <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 sticky top-24">
 
               <h2 className="text-2xl font-bold mb-8">
+
                 Order Summary
+
               </h2>
 
               <div className="space-y-6">
 
-                {cart.map((item, index) => (
+                {cart.map((item) => (
 
                   <div
-                    key={index}
+                    key={item.id}
                     className="flex items-center gap-4"
                   >
 
@@ -144,17 +239,25 @@ export default function CheckoutPage() {
                     <div className="flex-1">
 
                       <h3 className="font-semibold">
+
                         {item.name}
+
                       </h3>
 
                       <p className="text-zinc-500 text-sm">
+
                         Premium Hot Wheels Protector
+
                       </p>
 
                     </div>
 
                     <p className="font-bold">
+
                       ₹{item.price}
+                      {" "}×{" "}
+                      {item.quantity}
+
                     </p>
 
                   </div>
@@ -197,75 +300,123 @@ export default function CheckoutPage() {
                 className="w-full h-14 rounded-xl text-lg mt-10 active:scale-95 transition"
                 onClick={async () => {
 
-                  const response = await fetch(
-                    "/api/create-order",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        amount: total + 49,
-                      }),
-                    }
-                  )
+                  if (
+                    !customer ||
+                    !email ||
+                    !phone ||
+                    !address ||
+                    !city ||
+                    !pincode
+                  ) {
 
-                  const order = await response.json()
+                    alert(
+                      "Please fill all fields"
+                    )
 
-                  const options = {
-                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                    return
 
-                    amount: order.amount,
+                  }
 
-                    currency: order.currency,
-
-                    name: "HW Shield",
-
-                    description: "Hot Wheels Protector Purchase",
-
-                    order_id: order.id,
-
-                    handler: async function (response: any) {
-
-                      await fetch("/api/save-order", {
+                  const response =
+                    await fetch(
+                      "/api/create-order",
+                      {
                         method: "POST",
 
                         headers: {
-                          "Content-Type": "application/json",
+                          "Content-Type":
+                            "application/json",
                         },
 
                         body: JSON.stringify({
-                          customer,
-                          email,
-                          phone,
-                          address,
-                          city,
-                          pincode,
-
-                          products: cart,
-
-                          totalAmount: total + 49,
-
-                          paymentId:
-                            response.razorpay_payment_id,
+                          amount:
+                            total + 49,
                         }),
-                      })
+                      }
+                    )
 
-                      useCartStore
-                        .getState()
-                        .clearCart()
+                  const order =
+                    await response.json()
 
-                      window.location.href = "/success"
+                  const options = {
 
-                    },
+                    key:
+                      process.env
+                        .NEXT_PUBLIC_RAZORPAY_KEY_ID,
+
+                    amount:
+                      order.amount,
+
+                    currency:
+                      order.currency,
+
+                    name:
+                      "HW Shield",
+
+                    description:
+                      "Hot Wheels Protector Purchase",
+
+                    order_id:
+                      order.id,
+
+                    handler:
+                      async function (
+                        response: any
+                      ) {
+
+                        await fetch(
+                          "/api/save-order",
+                          {
+                            method:
+                              "POST",
+
+                            headers: {
+                              "Content-Type":
+                                "application/json",
+                            },
+
+                            body:
+                              JSON.stringify({
+                                customer,
+                                email,
+                                phone,
+                                address,
+                                city,
+                                pincode,
+
+                                products:
+                                  cart,
+
+                                totalAmount:
+                                  total + 49,
+
+                                paymentId:
+                                  response
+                                    .razorpay_payment_id,
+                              }),
+                          }
+                        )
+
+                        useCartStore
+                          .getState()
+                          .clearCart()
+
+                        window.location.href =
+                          "/success"
+
+                      },
 
                     theme: {
-                      color: "#000000",
+                      color:
+                        "#000000",
                     },
+
                   }
 
                   const razorpay =
-                    new (window as any).Razorpay(
+                    new (
+                      window as any
+                    ).Razorpay(
                       options
                     )
 
@@ -287,5 +438,7 @@ export default function CheckoutPage() {
       </div>
 
     </main>
+
   )
+
 }

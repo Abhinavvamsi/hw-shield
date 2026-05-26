@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
       return NextResponse.json(
         {
-          error: "Missing product id",
+          error: "Missing order id",
         },
         {
           status: 400,
@@ -26,24 +26,19 @@ export async function POST(req: Request) {
 
     const body = await req.json()
 
-    const updatedProduct =
-      await prisma.product.update({
+    const updatedOrder =
+      await prisma.order.update({
         where: {
           id,
         },
 
         data: {
-  name: body.name,
-  description: body.description,
-  price: body.price,
-  image: body.image,
-  category: body.category,
-  stock: body.stock,
-},
+          status: body.status,
+        },
       })
 
     return NextResponse.json(
-      updatedProduct
+      updatedOrder
     )
 
   } catch (error) {
@@ -51,7 +46,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "Failed to update product",
+          "Failed to update order status",
       },
       {
         status: 500,

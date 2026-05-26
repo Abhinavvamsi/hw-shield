@@ -9,6 +9,14 @@ export async function GET() {
     },
   })
 
-  return NextResponse.json(products)
+  return NextResponse.json(
+  products,
+  {
+    headers: {
+      "Cache-Control":
+        "no-store",
+    },
+  }
+)
 
 }

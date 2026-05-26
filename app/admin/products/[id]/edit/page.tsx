@@ -1,5 +1,12 @@
 import { prisma } from "@/lib/prisma"
 import EditProductForm from "@/components/edit-product-form"
+import { toast } from "sonner"
+
+import {
+  currentUser,
+} from "@clerk/nextjs/server"
+
+import { redirect } from "next/navigation"
 
 type Props = {
   params: Promise<{
@@ -10,6 +17,19 @@ type Props = {
 export default async function EditPage({
   params,
 }: Props) {
+
+  const user = await currentUser()
+
+  const isAdmin =
+    user?.primaryEmailAddress
+      ?.emailAddress ===
+    "abhinavvamsi2004@gmail.com"
+
+  if (!isAdmin) {
+
+    redirect("/")
+
+  }
 
   const { id } = await params
 

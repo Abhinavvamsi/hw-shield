@@ -14,6 +14,7 @@ export async function POST(req: Request) {
         price: body.price,
         image: body.image,
         category: body.category,
+        stock: body.stock,
       },
     })
 

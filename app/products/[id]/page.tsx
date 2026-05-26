@@ -7,6 +7,7 @@ import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { products } from "@/data/products"
 import { useCartStore } from "@/store/cart-store"
+import { toast } from "sonner"
 
 type ProductPageProps = {
   params: Promise<{

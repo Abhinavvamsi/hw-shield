@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 type Product = {
   id: string
@@ -10,6 +11,7 @@ type Product = {
   price: number
   image: string
   category: string
+  stock: number
 }
 
 export default function EditProductForm({
@@ -35,6 +37,9 @@ export default function EditProductForm({
   const [category, setCategory] =
     useState(product.category)
 
+  const [stock, setStock] =
+  useState(product.stock)
+
   async function handleUpdate() {
 
     const response = await fetch(
@@ -53,13 +58,14 @@ export default function EditProductForm({
           price: Number(price),
           image,
           category,
+          stock,
         }),
       }
     )
 
     if (response.ok) {
 
-      alert("Product Updated 🚀")
+      toast.success("Product Updated 🚀")
 
       router.push("/admin/products")
 
@@ -67,7 +73,7 @@ export default function EditProductForm({
 
     } else {
 
-      alert("Failed to update")
+      toast.error("Failed to update")
 
     }
 
@@ -119,6 +125,16 @@ export default function EditProductForm({
         }
         className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4"
       />
+
+      <input
+  type="number"
+  placeholder="Stock Quantity"
+  value={stock}
+  onChange={(e) =>
+    setStock(Number(e.target.value))
+  }
+  className="w-full h-16 rounded-2xl bg-black border border-zinc-800 px-6 text-lg"
+/>
 
       <button
         onClick={handleUpdate}

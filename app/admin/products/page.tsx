@@ -2,8 +2,28 @@ export const dynamic = "force-dynamic"
 
 import Image from "next/image"
 import { prisma } from "@/lib/prisma"
+import { toast } from "sonner"
+
+import {
+  currentUser,
+} from "@clerk/nextjs/server"
+
+import { redirect } from "next/navigation"
 
 export default async function ProductsPage() {
+
+  const user = await currentUser()
+
+  const isAdmin =
+    user?.primaryEmailAddress
+      ?.emailAddress ===
+    "abhinavvamsi2004@gmail.com"
+
+  if (!isAdmin) {
+
+    redirect("/")
+
+  }
 
   const products = await prisma.product.findMany({
     orderBy: {
@@ -54,6 +74,10 @@ export default async function ProductsPage() {
                   {product.description}
                 </p>
 
+                <p className="text-green-500 mt-4 font-semibold">
+                  Stock: {product.stock}
+                </p>
+
                 <div className="flex items-center justify-between mt-6">
 
                   <p className="text-3xl font-bold">
@@ -61,19 +85,21 @@ export default async function ProductsPage() {
                   </p>
 
                 </div>
-<a
-  href={`/admin/products/${product.id}/edit`}
->
 
-  <button
-    className="w-full mt-6 h-12 rounded-xl bg-white text-black hover:scale-[1.02] active:scale-95 transition font-semibold"
-  >
+                <a
+                  href={`/admin/products/${product.id}/edit`}
+                >
 
-    Edit Product
+                  <button
+                    className="w-full mt-6 h-12 rounded-xl bg-white text-black hover:scale-[1.02] active:scale-95 transition font-semibold"
+                  >
 
-  </button>
+                    Edit Product
 
-</a>
+                  </button>
+
+                </a>
+
                 <form
                   action={`/api/delete-product?id=${product.id}`}
                   method="POST"
