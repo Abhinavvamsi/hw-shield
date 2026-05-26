@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs"
 import type { Metadata } from "next"
 import Script from "next/script"
 import "./globals.css"
@@ -28,11 +29,15 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
 
-        <ThemeProvider>
+        <ClerkProvider>
 
-          {children}
+  <ThemeProvider>
 
-        </ThemeProvider>
+    {children}
+
+  </ThemeProvider>
+
+</ClerkProvider>
 
       </body>
 
