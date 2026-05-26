@@ -110,9 +110,7 @@ export default function Navbar() {
 
           {user ? (
 
-            <UserButton
-              afterSignOutUrl="/"
-            />
+            <UserButton />
 
           ) : (
 
@@ -213,9 +211,7 @@ export default function Navbar() {
 
           {user ? (
 
-            <UserButton
-              afterSignOutUrl="/"
-            />
+            <UserButton />
 
           ) : (
 
