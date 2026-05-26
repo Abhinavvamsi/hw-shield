@@ -135,11 +135,12 @@ function ProductDetails({
                     i++
                   ) {
                     addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      image: product.image,
-                    })
+  id: product.id,
+  name: product.name,
+  price: product.price,
+  image: product.image,
+  stock: product.stock,
+})
                   }
 
                 }}
@@ -158,11 +159,12 @@ function ProductDetails({
       i++
     ) {
       addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      })
+  id: product.id,
+  name: product.name,
+  price: product.price,
+  image: product.image,
+  stock: product.stock,
+})
     }
 
     router.push("/checkout")
