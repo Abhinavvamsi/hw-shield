@@ -9,8 +9,12 @@ type CartItem = {
 
 type CartStore = {
   cart: CartItem[]
+
   addToCart: (item: CartItem) => void
+
   removeFromCart: (index: number) => void
+
+  clearCart: () => void
 }
 
 export const useCartStore = create<CartStore>((set) => ({
@@ -25,4 +29,9 @@ export const useCartStore = create<CartStore>((set) => ({
     set((state) => ({
       cart: state.cart.filter((_, i) => i !== index),
     })),
+
+  clearCart: () =>
+    set({
+      cart: [],
+    }),
 }))
