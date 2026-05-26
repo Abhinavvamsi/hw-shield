@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { toast } from "sonner"
 
 import {
   Menu,
@@ -9,6 +8,7 @@ import {
 } from "lucide-react"
 
 import {
+  useEffect,
   useState,
 } from "react"
 
@@ -31,6 +31,11 @@ export default function Navbar() {
       (state) => state.cart
     )
 
+  const clearCart =
+    useCartStore(
+      (state) => state.clearCart
+    )
+
   const [mobileMenuOpen,
     setMobileMenuOpen
   ] = useState(false)
@@ -39,6 +44,33 @@ export default function Navbar() {
     user?.primaryEmailAddress
       ?.emailAddress ===
     "abhinavvamsi2004@gmail.com"
+
+  /* Clear cart when account changes */
+  useEffect(() => {
+
+    const storedUser =
+      localStorage.getItem(
+        "hw-shield-user"
+      )
+
+    const currentUser =
+      user?.id || "guest"
+
+    if (
+      storedUser &&
+      storedUser !== currentUser
+    ) {
+
+      clearCart()
+
+    }
+
+    localStorage.setItem(
+      "hw-shield-user",
+      currentUser
+    )
+
+  }, [user, clearCart])
 
   return (
 
