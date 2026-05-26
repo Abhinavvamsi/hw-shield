@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useCartStore } from "@/store/cart-store"
@@ -12,6 +13,13 @@ export default function CheckoutPage() {
     (sum, item) => sum + item.price,
     0
   )
+
+  const [customer, setCustomer] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [address, setAddress] = useState("")
+  const [city, setCity] = useState("")
+  const [pincode, setPincode] = useState("")
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -38,23 +46,39 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   placeholder="Full Name"
+                  value={customer}
+                  onChange={(e) =>
+                    setCustomer(e.target.value)
+                  }
                   className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                 />
 
                 <input
                   type="email"
                   placeholder="Email Address"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
                   className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                 />
 
                 <input
                   type="text"
                   placeholder="Phone Number"
+                  value={phone}
+                  onChange={(e) =>
+                    setPhone(e.target.value)
+                  }
                   className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                 />
 
                 <textarea
                   placeholder="Full Address"
+                  value={address}
+                  onChange={(e) =>
+                    setAddress(e.target.value)
+                  }
                   className="w-full rounded-xl bg-black border border-zinc-800 px-4 py-4 outline-none focus:border-white transition min-h-[120px]"
                 />
 
@@ -63,12 +87,20 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     placeholder="City"
+                    value={city}
+                    onChange={(e) =>
+                      setCity(e.target.value)
+                    }
                     className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                   />
 
                   <input
                     type="text"
                     placeholder="Pincode"
+                    value={pincode}
+                    onChange={(e) =>
+                      setPincode(e.target.value)
+                    }
                     className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
                   />
 
@@ -193,22 +225,49 @@ export default function CheckoutPage() {
 
                     order_id: order.id,
 
-                    handler: function () {
+                    handler: async function (response: any) {
 
-  useCartStore.getState().clearCart()
+                      await fetch("/api/save-order", {
+                        method: "POST",
 
-  window.location.href = "/success"
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
 
-},
+                        body: JSON.stringify({
+                          customer,
+                          email,
+                          phone,
+                          address,
+                          city,
+                          pincode,
+
+                          products: cart,
+
+                          totalAmount: total + 49,
+
+                          paymentId:
+                            response.razorpay_payment_id,
+                        }),
+                      })
+
+                      useCartStore
+                        .getState()
+                        .clearCart()
+
+                      window.location.href = "/success"
+
+                    },
 
                     theme: {
                       color: "#000000",
                     },
                   }
 
-                  const razorpay = new (window as any).Razorpay(
-                    options
-                  )
+                  const razorpay =
+                    new (window as any).Razorpay(
+                      options
+                    )
 
                   razorpay.open()
 
