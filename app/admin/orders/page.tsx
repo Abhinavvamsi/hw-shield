@@ -80,7 +80,18 @@ export default async function OrdersPage() {
                   <p className="text-xl font-bold">
                     ₹{order.totalAmount}
                   </p>
+                  <p className="text-zinc-500 mt-4">
 
+  Order ID:
+  <br />
+
+  <span className="text-white break-all">
+
+    {order.orderId}
+
+  </span>
+
+</p>
                   <p className="text-zinc-500 mt-2 break-all">
                     Payment ID:
                     <br />
@@ -111,6 +122,9 @@ export default async function OrdersPage() {
                           : order.status === "Delivered"
                           ? "bg-green-500/20 text-green-400"
 
+                          : order.status === "Cancelled"
+                          ? "bg-red-500/20 text-red-400"
+                          
                           : "bg-zinc-700 text-white"
                       }`}
                     >

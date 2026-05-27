@@ -1,40 +1,84 @@
 import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
 
-export async function POST(req: Request) {
+import { NextResponse }
+from "next/server"
+
+export async function POST(
+  req: Request
+) {
 
   try {
 
-    const { searchParams } =
-      new URL(req.url)
+    const body =
+      await req.json()
 
-    const id =
-      searchParams.get("id")
+    const order =
+      await prisma.order.findUnique({
 
-    if (!id) {
+        where: {
+          id: body.orderId,
+        },
+
+      })
+
+    if (!order) {
 
       return NextResponse.json(
         {
-          error: "Missing order id",
+          error:
+            "Order not found",
         },
         {
-          status: 400,
+          status: 404,
         }
       )
 
     }
 
-    const body = await req.json()
+    /* Restore stock if cancelled */
+    if (
+      body.status ===
+      "Cancelled"
+    ) {
+
+      const products =
+        order.products as any[]
+
+      for (const item of products) {
+
+        await prisma.product.update({
+
+          where: {
+            id: item.id,
+          },
+
+          data: {
+
+            stock: {
+              increment:
+                item.quantity,
+            },
+
+          },
+
+        })
+
+      }
+
+    }
 
     const updatedOrder =
       await prisma.order.update({
+
         where: {
-          id,
+          id: body.orderId,
         },
 
         data: {
-          status: body.status,
+          status:
+            body.status,
         },
+
       })
 
     return NextResponse.json(
@@ -46,7 +90,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "Failed to update order status",
+          "Failed to update order",
       },
       {
         status: 500,

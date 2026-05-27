@@ -1,24 +1,34 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter }
+from "next/navigation"
 
-export default function OrderStatusSelect({
+export default function
+OrderStatusSelect({
+
   orderId,
+
   currentStatus,
+
 }: {
+
   orderId: string
+
   currentStatus: string
+
 }) {
 
-  const router = useRouter()
+  const router =
+    useRouter()
 
   async function updateStatus(
     status: string
   ) {
 
     await fetch(
-      `/api/update-order-status?id=${orderId}`,
+      "/api/update-order-status",
       {
+
         method: "POST",
 
         headers: {
@@ -27,8 +37,13 @@ export default function OrderStatusSelect({
         },
 
         body: JSON.stringify({
+
+          orderId,
+
           status,
+
         }),
+
       }
     )
 
@@ -37,11 +52,16 @@ export default function OrderStatusSelect({
   }
 
   return (
+
     <select
       value={currentStatus}
+
       onChange={(e) =>
-        updateStatus(e.target.value)
+        updateStatus(
+          e.target.value
+        )
       }
+
       className="mt-6 bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white"
     >
 
@@ -57,10 +77,16 @@ export default function OrderStatusSelect({
         Shipped
       </option>
 
+      <option value="Cancelled">
+        Cancelled
+      </option>
+
       <option value="Delivered">
         Delivered
       </option>
 
     </select>
+
   )
+
 }

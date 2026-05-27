@@ -6,26 +6,48 @@ export async function POST(req: Request) {
   try {
 
     const body = await req.json()
+    const orderId =
+    `HWS-${Date.now()}`
 
-    const order = await prisma.order.create({
-      data: {
-        customer: body.customer,
-        email: body.email,
-        phone: body.phone,
-        address: body.address,
-        city: body.city,
-        pincode: body.pincode,
+    const order =
+    await prisma.order.create({
 
-        products: body.products,
+    data: {
 
-        totalAmount:
-          body.totalAmount,
+  orderId,
 
-        paymentId:
-          body.paymentId,
-      },
-    })
+  userId:
+    body.userId,
 
+  customer:
+    body.customer,
+
+  email:
+    body.email,
+
+  phone:
+    body.phone,
+
+  address:
+    body.address,
+
+  city:
+    body.city,
+
+  pincode:
+    body.pincode,
+
+  products:
+    body.products,
+
+  totalAmount:
+    body.totalAmount,
+
+  paymentId:
+    body.paymentId,
+
+},
+})
     // Reduce stock after successful order
     for (const item of body.products) {
 

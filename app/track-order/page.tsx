@@ -3,20 +3,29 @@
 import { useState } from "react"
 
 import Navbar from "@/components/navbar"
+
 import { toast } from "sonner"
 
 type Order = {
+
+  orderId: string
+
   customer: string
+
   totalAmount: number
+
   paymentId: string
+
   status: string
+
   createdAt: string
+
 }
 
 export default function TrackOrderPage() {
 
-  const [paymentId,
-    setPaymentId
+  const [orderId,
+    setOrderId
   ] = useState("")
 
   const [order,
@@ -34,8 +43,18 @@ export default function TrackOrderPage() {
       setLoading(true)
 
       const response = await fetch(
-        `/api/track-order?paymentId=${paymentId}`
+        `/api/track-order?orderId=${orderId}`
       )
+
+      if (!response.ok) {
+
+        toast.error(
+          "Order not found"
+        )
+
+        return
+
+      }
 
       const data =
         await response.json()
@@ -44,7 +63,9 @@ export default function TrackOrderPage() {
 
     } catch (error) {
 
-      toast.error("Order not found")
+      toast.error(
+        "Order not found"
+      )
 
     } finally {
 
@@ -74,7 +95,7 @@ export default function TrackOrderPage() {
 
           <p className="text-zinc-500 mt-4 text-lg">
 
-            Enter your payment ID to check your latest order status.
+            Enter your Order ID to check your latest order status.
 
           </p>
 
@@ -85,16 +106,16 @@ export default function TrackOrderPage() {
 
           <label className="block text-zinc-400 mb-4">
 
-            Payment ID
+            Order ID
 
           </label>
 
           <input
             type="text"
-            placeholder="Enter Payment ID"
-            value={paymentId}
+            placeholder="Enter Order ID"
+            value={orderId}
             onChange={(e) =>
-              setPaymentId(
+              setOrderId(
                 e.target.value
               )
             }
@@ -107,7 +128,7 @@ export default function TrackOrderPage() {
             }
             disabled={
               loading ||
-              !paymentId
+              !orderId
             }
             className="w-full mt-6 h-14 rounded-xl bg-white text-black font-bold hover:scale-[1.02] active:scale-95 transition disabled:opacity-50"
           >
@@ -135,10 +156,20 @@ export default function TrackOrderPage() {
 
                 </h2>
 
+                <p className="text-zinc-400 mt-4">
+
+                  Order ID:
+                  <br />
+
+                  {order.orderId}
+
+                </p>
+
                 <p className="text-zinc-400 mt-4 break-all">
 
                   Payment ID:
                   <br />
+
                   {order.paymentId}
 
                 </p>
@@ -182,10 +213,11 @@ export default function TrackOrderPage() {
 
                 <div
                   className={`w-5 h-5 rounded-full ${
-                    ["Pending",
-                    "Packed",
-                    "Shipped",
-                    "Delivered"
+                    [
+                      "Pending",
+                      "Packed",
+                      "Shipped",
+                      "Delivered",
                     ].includes(
                       order.status
                     )
@@ -207,9 +239,10 @@ export default function TrackOrderPage() {
 
                 <div
                   className={`w-5 h-5 rounded-full ${
-                    ["Packed",
-                    "Shipped",
-                    "Delivered"
+                    [
+                      "Packed",
+                      "Shipped",
+                      "Delivered",
                     ].includes(
                       order.status
                     )
@@ -231,8 +264,9 @@ export default function TrackOrderPage() {
 
                 <div
                   className={`w-5 h-5 rounded-full ${
-                    ["Shipped",
-                    "Delivered"
+                    [
+                      "Shipped",
+                      "Delivered",
                     ].includes(
                       order.status
                     )

@@ -119,6 +119,15 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/orders"
+            className="hover:text-white transition"
+          >
+
+            My Orders
+
+          </Link>
+
+          <Link
             href="/cart"
             className="hover:text-white transition"
           >
@@ -216,6 +225,15 @@ export default function Navbar() {
           >
 
             Track Order
+
+          </Link>
+
+          <Link
+            href="/orders"
+            className="block text-lg"
+          >
+
+            My Orders
 
           </Link>
 

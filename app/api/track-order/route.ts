@@ -1,21 +1,28 @@
 import { prisma } from "@/lib/prisma"
+
 import { NextResponse } from "next/server"
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request
+) {
 
   try {
 
-    const { searchParams } =
-      new URL(req.url)
+    const {
+      searchParams,
+    } = new URL(req.url)
 
-    const paymentId =
-      searchParams.get("paymentId")
+    const orderId =
+      searchParams.get(
+        "orderId"
+      )
 
-    if (!paymentId) {
+    if (!orderId) {
 
       return NextResponse.json(
         {
-          error: "Missing payment ID",
+          error:
+            "Missing order ID",
         },
         {
           status: 400,
@@ -26,16 +33,19 @@ export async function GET(req: Request) {
 
     const order =
       await prisma.order.findFirst({
+
         where: {
-          paymentId,
+          orderId,
         },
+
       })
 
     if (!order) {
 
       return NextResponse.json(
         {
-          error: "Order not found",
+          error:
+            "Order not found",
         },
         {
           status: 404,
@@ -44,13 +54,16 @@ export async function GET(req: Request) {
 
     }
 
-    return NextResponse.json(order)
+    return NextResponse.json(
+      order
+    )
 
   } catch (error) {
 
     return NextResponse.json(
       {
-        error: "Failed to track order",
+        error:
+          "Failed to track order",
       },
       {
         status: 500,

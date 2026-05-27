@@ -1,44 +1,108 @@
 "use client"
 
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+
+import { useSearchParams }
+from "next/navigation"
+
+import Navbar from "@/components/navbar"
+
+import { Button }
+from "@/components/ui/button"
 
 export default function SuccessPage() {
 
+  const searchParams =
+    useSearchParams()
+
+  const orderId =
+    searchParams.get(
+      "orderId"
+    )
+
   return (
-    <main className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
 
-      <div className="max-w-2xl w-full text-center bg-zinc-900 border border-zinc-800 rounded-3xl p-10 md:p-16">
+    <main className="min-h-screen bg-black text-white">
 
-        <div className="text-7xl mb-6">
-          🎉
-        </div>
+      <Navbar />
 
-        <h1 className="text-4xl md:text-5xl font-bold">
-          Payment Successful
-        </h1>
+      <div className="flex items-center justify-center px-6 py-20">
 
-        <p className="text-zinc-500 text-lg mt-6 leading-relaxed">
-          Thank you for shopping with HW Shield.
-          Your order has been placed successfully.
-        </p>
+        <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-12 text-center">
 
-        <div className="mt-10">
+          <div className="text-7xl mb-6">
 
-          <Link href="/">
+            🎉
 
-            <Button className="h-14 px-10 rounded-xl text-lg active:scale-95 transition">
+          </div>
 
-              Continue Shopping
+          <h1 className="text-5xl font-bold">
 
-            </Button>
+            Payment Successful
 
-          </Link>
+          </h1>
+
+          <p className="text-zinc-400 text-lg mt-6 leading-relaxed">
+
+            Thank you for shopping with HW Shield.
+
+            Your order has been placed successfully.
+
+          </p>
+
+          {/* Order ID */}
+          <div className="mt-10 bg-black border border-zinc-800 rounded-2xl p-6">
+
+            <p className="text-zinc-500 text-sm uppercase tracking-widest">
+
+              Order ID
+
+            </p>
+
+            <p className="text-3xl font-bold mt-3 break-all">
+
+              {orderId}
+
+            </p>
+
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col md:flex-row gap-4 justify-center mt-10">
+
+            <Link href="/track-order">
+
+              <Button
+                className="rounded-xl px-8 py-6 text-lg"
+              >
+
+                Track Order
+
+              </Button>
+
+            </Link>
+
+            <Link href="/">
+
+              <Button
+                variant="outline"
+                className="rounded-xl px-8 py-6 text-lg"
+              >
+
+                Continue Shopping
+
+              </Button>
+
+            </Link>
+
+          </div>
 
         </div>
 
       </div>
 
     </main>
+
   )
+
 }

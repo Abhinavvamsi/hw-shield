@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button"
 
 import { useCartStore } from "@/store/cart-store"
 
+import { toast } from "sonner"
+
 import {
   RedirectToSignIn,
   useUser,
@@ -26,7 +28,9 @@ export default function CheckoutPage() {
   const { user } = useUser()
 
   if (!user) {
+
     return <RedirectToSignIn />
+
   }
 
   const total = cart.reduce(
@@ -309,7 +313,7 @@ export default function CheckoutPage() {
                     !pincode
                   ) {
 
-                    alert(
+                    toast.error(
                       "Please fill all fields"
                     )
 
@@ -329,9 +333,12 @@ export default function CheckoutPage() {
                         },
 
                         body: JSON.stringify({
+
                           amount:
                             total + 49,
+
                         }),
+
                       }
                     )
 
@@ -364,45 +371,61 @@ export default function CheckoutPage() {
                         response: any
                       ) {
 
-                        await fetch(
-                          "/api/save-order",
-                          {
-                            method:
-                              "POST",
+                        const saveOrderResponse =
+                          await fetch(
+                            "/api/save-order",
+                            {
 
-                            headers: {
-                              "Content-Type":
-                                "application/json",
-                            },
+                              method:
+                                "POST",
 
-                            body:
-                              JSON.stringify({
-                                customer,
-                                email,
-                                phone,
-                                address,
-                                city,
-                                pincode,
+                              headers: {
+                                "Content-Type":
+                                  "application/json",
+                              },
 
-                                products:
-                                  cart,
+                              body:
+                                JSON.stringify({
 
-                                totalAmount:
-                                  total + 49,
+                                  userId:
+                                    user.id,
 
-                                paymentId:
-                                  response
-                                    .razorpay_payment_id,
-                              }),
-                          }
-                        )
+                                  customer,
+
+                                  email,
+
+                                  phone,
+
+                                  address,
+
+                                  city,
+
+                                  pincode,
+
+                                  products:
+                                    cart,
+
+                                  totalAmount:
+                                    total + 49,
+
+                                  paymentId:
+                                    response
+                                      .razorpay_payment_id,
+
+                                }),
+
+                            }
+                          )
+
+                        const savedOrder =
+                          await saveOrderResponse.json()
 
                         useCartStore
                           .getState()
                           .clearCart()
 
                         window.location.href =
-                          "/success"
+                          `/success?orderId=${savedOrder.orderId}`
 
                       },
 

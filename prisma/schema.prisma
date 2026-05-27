@@ -8,13 +8,25 @@ datasource db {
 }
 
 model Order {
+
   status String @default("Pending")
+
   id          String   @id @default(cuid())
+
+  orderId     String   @unique
+
+  userId      String?
+
   customer    String
+
   email       String
+
   phone       String
+
   address     String
+
   city        String
+
   pincode     String
 
   products    Json
@@ -24,8 +36,8 @@ model Order {
   paymentId   String?
 
   createdAt   DateTime @default(now())
-}
 
+}
 model Product {
   id          String   @id @default(cuid())
   name        String
