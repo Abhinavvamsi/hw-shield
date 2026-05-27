@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
+
 import EditProductForm from "@/components/edit-product-form"
-import { toast } from "sonner"
 
 import {
   currentUser,
@@ -18,7 +18,8 @@ export default async function EditPage({
   params,
 }: Props) {
 
-  const user = await currentUser()
+  const user =
+    await currentUser()
 
   const isAdmin =
     user?.primaryEmailAddress
@@ -31,34 +32,53 @@ export default async function EditPage({
 
   }
 
-  const { id } = await params
+  const { id } =
+    await params
 
   const product =
     await prisma.product.findUnique({
+
       where: {
         id,
       },
+
     })
 
   if (!product) {
-    return <div>Product not found</div>
+
+    return (
+      <div>
+        Product not found
+      </div>
+    )
+
   }
 
   return (
+
     <main className="min-h-screen bg-black text-white p-8">
 
       <div className="max-w-3xl mx-auto">
 
         <h1 className="text-5xl font-bold mb-12">
+
           Edit Product
+
         </h1>
 
         <EditProductForm
-          product={product}
+          product={{
+            ...product,
+
+            images:
+                (product.images as string[]) || [],
+          }}
         />
 
       </div>
 
     </main>
+
   )
+
 }
