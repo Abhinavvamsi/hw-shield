@@ -40,7 +40,7 @@ export default async function AdminPage() {
 
           <div>
 
-            <p className="text-zinc-500 uppercase tracking-widest text-sm">
+            <p className="text-red-500 uppercase tracking-widest text-sm">
 
               HW Shield Admin
 
@@ -52,7 +52,7 @@ export default async function AdminPage() {
 
             </h1>
 
-            <p className="text-zinc-500 mt-4 text-lg">
+            <p className="text-red-500 mt-4 text-lg">
 
               Manage products, orders, inventory and store operations.
 
@@ -83,7 +83,7 @@ export default async function AdminPage() {
 
             <div className="space-y-6">
 
-              <div className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center text-3xl font-bold">
+              <div className="w-16 h-16 rounded-2xl bg-red-500 text-white hover:bg-red-600 flex items-center justify-center text-3xl font-bold">
 
                 +
 
@@ -97,7 +97,7 @@ export default async function AdminPage() {
 
                 </h2>
 
-                <p className="text-zinc-500 mt-4 leading-relaxed">
+                <p className="text-red-500 mt-4 leading-relaxed">
 
                   Create new products with Cloudinary image uploads and stock management.
 
@@ -117,7 +117,7 @@ export default async function AdminPage() {
 
             <div className="space-y-6">
 
-              <div className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center text-3xl font-bold">
+              <div className="w-16 h-16 rounded-2xl bg-red-500 text-white hover:bg-red-600 flex items-center justify-center text-3xl font-bold">
 
                 📦
 
@@ -131,7 +131,7 @@ export default async function AdminPage() {
 
                 </h2>
 
-                <p className="text-zinc-500 mt-4 leading-relaxed">
+                <p className="text-red-500 mt-4 leading-relaxed">
 
                   Track customer purchases, update statuses and monitor deliveries.
 
@@ -151,7 +151,7 @@ export default async function AdminPage() {
 
             <div className="space-y-6">
 
-              <div className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center text-3xl font-bold">
+              <div className="w-16 h-16 rounded-2xl bg-red-500 text-white hover:bg-red-600 flex items-center justify-center text-3xl font-bold">
 
                 🛠
 
@@ -165,7 +165,7 @@ export default async function AdminPage() {
 
                 </h2>
 
-                <p className="text-zinc-500 mt-4 leading-relaxed">
+                <p className="text-red-500 mt-4 leading-relaxed">
 
                   Edit pricing, update inventory and manage your catalog.
 

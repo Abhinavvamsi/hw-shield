@@ -57,6 +57,9 @@ export default function AddProductPage() {
     setCategory
   ] = useState("")
 
+  const [badge, setBadge] =
+    useState("")
+
   const [stock, setStock] =
     useState("")
 
@@ -159,6 +162,8 @@ export default function AddProductPage() {
 
             category,
 
+            badge,
+
             stock: Number(stock),
 
           }),
@@ -177,6 +182,7 @@ export default function AddProductPage() {
       setPrice("")
       setImages([])
       setCategory("")
+      setBadge("")
       setStock("")
 
     } else {
@@ -191,71 +197,211 @@ export default function AddProductPage() {
 
   return (
 
-    <main className="min-h-screen bg-black text-white p-8">
+    <main className="min-h-screen bg-black text-white p-6 md:p-8">
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-4xl mx-auto">
 
-        <h1 className="text-5xl font-bold mb-12">
+        {/* Header */}
+        <div className="mb-12">
 
-          Add Product
+          <p className="text-red-500 uppercase tracking-[0.3em] text-sm">
 
-        </h1>
+            Admin Dashboard
 
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-6">
+          </p>
+
+          <h1 className="text-5xl md:text-6xl font-bold mt-4">
+
+            Add Product
+
+          </h1>
+
+        </div>
+
+        {/* Form */}
+        <div
+          className="
+          bg-gradient-to-b
+          from-zinc-900
+          to-zinc-950
+          border
+          border-zinc-800
+          rounded-[2rem]
+          p-6
+          md:p-10
+          space-y-8
+          shadow-2xl
+          "
+        >
 
           {/* Product Name */}
-          <input
-            type="text"
-            placeholder="Product Name"
-            value={name}
-            onChange={(e) =>
-              setName(
-                e.target.value
-              )
-            }
-            className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4"
-          />
+          <div className="space-y-3">
 
-          {/* Description */}
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) =>
-              setDescription(
-                e.target.value
-              )
-            }
-            className="w-full rounded-xl bg-black border border-zinc-800 px-4 py-4 min-h-[140px]"
-          />
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
 
-          {/* Price */}
-          <input
-            type="number"
-            placeholder="Price"
-            value={price}
-            onChange={(e) =>
-              setPrice(
-                e.target.value
-              )
-            }
-            className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4"
-          />
+              Product Name
 
-          {/* Multiple Image Upload */}
-          <div className="space-y-4">
+            </label>
 
             <input
-              type="file"
-              accept="image/*"
-              onChange={
-                handleImageUpload
+              type="text"
+              placeholder="Enter product name"
+              value={name}
+              onChange={(e) =>
+                setName(
+                  e.target.value
+                )
               }
-              className="w-full text-sm text-zinc-400"
+              className="
+              w-full
+              h-14
+              rounded-2xl
+              bg-black
+              border
+              border-zinc-800
+              px-5
+              text-white
+              outline-none
+              focus:border-red-500
+              focus:ring-2
+              focus:ring-red-500/20
+              transition-all
+              "
             />
+
+          </div>
+
+          {/* Description */}
+          <div className="space-y-3">
+
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
+
+              Description
+
+            </label>
+
+            <textarea
+              placeholder="Write product description..."
+              value={description}
+              onChange={(e) =>
+                setDescription(
+                  e.target.value
+                )
+              }
+              className="
+              w-full
+              rounded-2xl
+              bg-black
+              border
+              border-zinc-800
+              px-5
+              py-5
+              min-h-[180px]
+              text-white
+              outline-none
+              focus:border-red-500
+              focus:ring-2
+              focus:ring-red-500/20
+              transition-all
+              "
+            />
+
+          </div>
+
+          {/* Price */}
+          <div className="space-y-3">
+
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
+
+              Price
+
+            </label>
+
+            <input
+              type="number"
+              placeholder="Enter price"
+              value={price}
+              onChange={(e) =>
+                setPrice(
+                  e.target.value
+                )
+              }
+              className="
+              w-full
+              h-14
+              rounded-2xl
+              bg-black
+              border
+              border-zinc-800
+              px-5
+              text-white
+              outline-none
+              focus:border-red-500
+              focus:ring-2
+              focus:ring-red-500/20
+              transition-all
+              "
+            />
+
+          </div>
+
+          {/* Image Upload */}
+          <div className="space-y-4">
+
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
+
+              Product Images
+
+            </label>
+
+            <label
+              className="
+              flex
+              items-center
+              justify-center
+              w-full
+              h-44
+              rounded-3xl
+              border-2
+              border-dashed
+              border-zinc-700
+              bg-black
+              cursor-pointer
+              hover:border-red-500
+              hover:bg-zinc-950
+              transition-all
+              duration-300
+              "
+            >
+
+              <div className="text-center">
+
+                <p className="text-2xl font-bold text-white">
+
+                  Upload Product Images
+
+                </p>
+
+                <p className="text-zinc-500 mt-3">
+
+                  Click to browse images
+
+                </p>
+
+              </div>
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+
+            </label>
 
             {uploading && (
 
-              <p className="text-zinc-500">
+              <p className="text-red-500">
 
                 Uploading image...
 
@@ -263,9 +409,10 @@ export default function AddProductPage() {
 
             )}
 
+            {/* Preview */}
             {images.length > 0 && (
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 
                 {images.map((img) => (
 
@@ -277,7 +424,14 @@ export default function AddProductPage() {
                     <img
                       src={img}
                       alt="Preview"
-                      className="w-full h-48 object-cover rounded-2xl border border-zinc-800"
+                      className="
+                      w-full
+                      h-48
+                      object-cover
+                      rounded-2xl
+                      border
+                      border-zinc-800
+                      "
                     />
 
                     <button
@@ -291,14 +445,17 @@ export default function AddProductPage() {
                       }
                       className="
                       absolute
-                      top-2
-                      right-2
-                      w-8
-                      h-8
+                      top-3
+                      right-3
+                      w-9
+                      h-9
                       rounded-full
                       bg-red-500
+                      hover:bg-red-600
                       text-white
+                      text-lg
                       font-bold
+                      transition
                       "
                     >
 
@@ -317,49 +474,167 @@ export default function AddProductPage() {
           </div>
 
           {/* Category */}
-          <select
-            value={category}
-            onChange={(e) =>
-              setCategory(
-                e.target.value
-              )
-            }
-            className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 text-white"
-          >
+          <div className="space-y-3">
 
-            <option value="">
-              Select Category
-            </option>
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
 
-            <option value="Protectors">
-              Protectors
-            </option>
+              Category
 
-            <option value="Cars">
-              Cars
-            </option>
+            </label>
 
-          </select>
+            <select
+              value={category}
+              onChange={(e) =>
+                setCategory(
+                  e.target.value
+                )
+              }
+              className="
+              w-full
+              h-14
+              rounded-2xl
+              bg-black
+              border
+              border-zinc-800
+              px-5
+              text-white
+              outline-none
+              focus:border-red-500
+              focus:ring-2
+              focus:ring-red-500/20
+              transition-all
+              "
+            >
+
+              <option value="">
+                Select Category
+              </option>
+
+              <option value="Protectors">
+                Protectors
+              </option>
+
+              <option value="Cars">
+                Cars
+              </option>
+
+            </select>
+
+          </div>
+
+          {/* Badge */}
+          <div className="space-y-3">
+
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
+
+              Product Badge
+
+            </label>
+
+            <select
+              value={badge}
+              onChange={(e) =>
+                setBadge(e.target.value)
+              }
+              className="
+              w-full
+              h-14
+              rounded-2xl
+              bg-black
+              border
+              border-zinc-800
+              px-5
+              text-white
+              outline-none
+              focus:border-red-500
+              focus:ring-2
+              focus:ring-red-500/20
+              transition-all
+              "
+            >
+
+              <option value="">
+                No Badge
+              </option>
+
+              <option value="PREMIUM">
+                PREMIUM
+              </option>
+
+              <option value="LIMITED">
+                LIMITED
+              </option>
+
+              <option value="BESTSELLER">
+                BESTSELLER
+              </option>
+
+              <option value="NEW">
+                NEW
+              </option>
+
+            </select>
+
+          </div>
 
           {/* Stock */}
-          <input
-            type="number"
-            placeholder="Stock Quantity"
-            value={stock}
-            onChange={(e) =>
-              setStock(
-                e.target.value
-              )
-            }
-            className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4"
-          />
+          <div className="space-y-3">
+
+            <label className="text-sm text-zinc-400 uppercase tracking-wider">
+
+              Stock Quantity
+
+            </label>
+
+            <input
+              type="number"
+              placeholder="Enter stock quantity"
+              value={stock}
+              onChange={(e) =>
+                setStock(
+                  e.target.value
+                )
+              }
+              className="
+              w-full
+              h-14
+              rounded-2xl
+              bg-black
+              border
+              border-zinc-800
+              px-5
+              text-white
+              outline-none
+              focus:border-red-500
+              focus:ring-2
+              focus:ring-red-500/20
+              transition-all
+              "
+            />
+
+          </div>
 
           {/* Submit */}
           <Button
             onClick={
               handleAddProduct
             }
-            className="w-full h-14 rounded-xl text-lg hover:scale-[1.02] active:scale-95 transition-all duration-300"
+            className="
+            w-full
+            h-16
+            rounded-2xl
+            text-lg
+            font-bold
+            bg-red-500
+            hover:bg-red-600
+            hover:scale-[1.01]
+            active:scale-95
+            transition-all
+            duration-300
+            shadow-lg
+            shadow-red-500/20
+            hover:shadow-red-500/40
+            "
           >
 
             Add Product

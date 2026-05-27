@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 
+import { Bebas_Neue } from "next/font/google"
+
 import { Button } from "@/components/ui/button"
 
 import { useCartStore } from "@/store/cart-store"
@@ -9,6 +11,16 @@ import { useCartStore } from "@/store/cart-store"
 import ProductCard from "@/components/product-card"
 
 import Navbar from "@/components/navbar"
+
+import Footer from "@/components/footer"
+
+const bebas = Bebas_Neue({
+
+  subsets: ["latin"],
+
+  weight: "400",
+
+})
 
 type Product = {
 
@@ -25,6 +37,8 @@ type Product = {
   category: string
 
   stock: number
+
+  badge?: string
 
 }
 
@@ -68,10 +82,9 @@ export default function Home() {
         const data =
           await response.json()
 
-        /* Small delay for smooth skeleton animation */
         await new Promise(
           (resolve) =>
-            setTimeout(resolve, 1200)
+            setTimeout(resolve, 1000)
         )
 
         setProducts(data)
@@ -151,68 +164,155 @@ export default function Home() {
 
   return (
 
-    <main className="min-h-screen bg-gradient-to-b from-background via-background to-background text-foreground transition-colors duration-300">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden">
 
       {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28">
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-24 md:py-32">
 
-        <div className="max-w-3xl">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-          <p className="text-zinc-500 uppercase tracking-widest text-sm md:text-base">
+          {/* LEFT SIDE */}
+          <div>
 
-            Premium Diecast & Protection
+            {/* Subtitle */}
+            <p className="text-red-500 uppercase tracking-[0.3em] text-sm md:text-base">
 
-          </p>
+              Premium Diecast & Protection
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mt-4">
+            </p>
 
-            Premium
+            {/* Main Heading */}
+            <h1
+              className={`
+                ${bebas.className}
+                text-6xl
+                sm:text-7xl
+                md:text-8xl
+                lg:text-[9rem]
+                leading-[0.9]
+                tracking-wide
+                mt-6
+                max-w-5xl
+              `}
+            >
 
-            <span className="text-zinc-500 dark:text-zinc-400">
+              PREMIUM
 
-              {" "}Diecast Cars{" "}
+              <span className="text-red-500">
 
-            </span>
+                {" "}DIECAST CARS{" "}
 
-            & Protectors
+              </span>
 
-          </h1>
+              <br />
 
-          <p className="text-zinc-500 text-base md:text-lg mt-6 max-w-xl leading-relaxed">
+              & PROTECTORS
 
-            Discover premium Hot Wheels, collectible diecast cars, acrylic cases and soft protectors built for passionate collectors.
+            </h1>
 
-          </p>
+            {/* Description */}
+            <p className="text-zinc-300 text-lg md:text-xl mt-8 max-w-2xl leading-relaxed">
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-10">
+              Discover premium Hot Wheels, collectible diecast cars,
+              acrylic cases and soft protectors built for passionate collectors.
 
-  <a href="/protectors">
+            </p>
 
-    <Button className="rounded-xl px-8 py-6 text-lg hover:scale-105 active:scale-95 transition-all duration-300">
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-5 mt-12">
 
-      Protectors
+              <a href="/protectors">
 
-    </Button>
+                <Button
+                  className="
+                  rounded-2xl
+                  px-10
+                  py-7
+                  text-lg
+                  bg-red-500
+                  hover:bg-red-600
+                  hover:scale-105
+                  active:scale-95
+                  transition-all
+                  duration-300
+                  shadow-lg
+                  shadow-red-500/20
+                  hover:shadow-red-500/40
+                  "
+                >
 
-  </a>
+                  Shop Protectors
 
-  <a href="/cars">
+                </Button>
 
-    <Button
-      variant="outline"
-      className="rounded-xl px-8 py-6 text-lg bg-transparent border-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-900 hover:scale-105 active:scale-95 transition-all duration-300"
-    >
+              </a>
 
-      Diecast Cars
+              <a href="/cars">
 
-    </Button>
+                <Button
+                  variant="outline"
+                  className="
+                  rounded-2xl
+                  px-10
+                  py-7
+                  text-lg
+                  bg-transparent
+                  border-red-500/40
+                  hover:bg-zinc-900
+                  hover:border-red-500
+                  hover:scale-105
+                  active:scale-95
+                  transition-all
+                  duration-300
+                  "
+                >
 
-  </a>
+                  Explore Diecast Cars
 
-</div>
+                </Button>
+
+              </a>
+
+            </div>
+
+          </div>
+
+          {/* RIGHT SIDE IMAGE */}
+          <div className="relative flex justify-center">
+
+            {/* Red Glow */}
+            <div
+              className="
+              absolute
+              inset-0
+              bg-red-500/20
+              blur-3xl
+              rounded-full
+              "
+            />
+
+            {/* Hero Image */}
+            <img
+              src="/hero-car.png"
+              alt="Premium Diecast"
+              className="
+              relative
+              z-10
+              w-full
+              max-w-lg
+              object-contain
+              hover:scale-105
+              transition-all
+              duration-500
+              drop-shadow-[0_0_50px_rgba(239,68,68,0.35)]
+              "
+            />
+
+          </div>
+
         </div>
 
       </section>
@@ -220,19 +320,27 @@ export default function Home() {
       {/* Products Section */}
       <section
         id="products"
-        className="max-w-7xl mx-auto px-4 md:px-6 pb-20"
+        className="max-w-7xl mx-auto px-4 md:px-6 pb-24"
       >
 
-        {/* Section Header */}
-        <div className="mb-10">
+        {/* Header */}
+        <div className="mb-12">
 
-          <p className="text-zinc-500 uppercase tracking-widest text-sm">
+          <p className="text-red-500 uppercase tracking-[0.3em] text-sm">
 
             Featured Products
 
           </p>
 
-          <h2 className="text-3xl md:text-4xl font-bold mt-2">
+          <h2
+            className={`
+              ${bebas.className}
+              text-5xl
+              md:text-6xl
+              mt-4
+              tracking-wide
+            `}
+          >
 
             Collector Favorites
 
@@ -241,7 +349,7 @@ export default function Home() {
         </div>
 
         {/* Search */}
-        <div className="mb-8">
+        <div className="mb-10">
 
           <input
             type="text"
@@ -254,16 +362,16 @@ export default function Home() {
             }
             className="
             w-full
-            h-14
+            h-16
             rounded-2xl
             bg-zinc-900
             border
             border-zinc-800
-            px-5
+            px-6
             text-white
             placeholder:text-zinc-500
             outline-none
-            focus:border-white
+            focus:border-red-500
             transition-all
             duration-300
             "
@@ -271,8 +379,8 @@ export default function Home() {
 
         </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap gap-3 md:gap-4 mb-10">
+        {/* Categories */}
+        <div className="flex flex-wrap gap-4 mb-12">
 
           {categories.map((category) => (
 
@@ -281,11 +389,24 @@ export default function Home() {
               onClick={() =>
                 setSelectedCategory(category)
               }
-              className={`px-4 md:px-5 py-2 rounded-full border transition text-sm md:text-base ${
-                selectedCategory === category
-                  ? "bg-white text-black border-white"
-                  : "border-zinc-700 text-zinc-400 hover:border-white hover:text-white dark:hover:text-white"
-              }`}
+              className={`
+                px-5
+                py-2.5
+                rounded-full
+                border
+                transition-all
+                duration-300
+                text-sm
+                md:text-base
+
+                ${
+                  selectedCategory === category
+
+                    ? "bg-red-500 text-white border-red-500"
+
+                    : "border-zinc-700 text-zinc-400 hover:border-red-500 hover:text-white"
+                }
+              `}
             >
 
               {category}
@@ -296,7 +417,7 @@ export default function Home() {
 
         </div>
 
-        {/* Skeleton Loader */}
+        {/* Skeleton */}
         {loading && (
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -337,13 +458,13 @@ export default function Home() {
 
         )}
 
-        {/* Empty State */}
+        {/* Empty */}
         {!loading &&
           filteredProducts.length === 0 && (
 
-          <div className="text-center py-24">
+          <div className="text-center py-28">
 
-            <h2 className="text-3xl font-bold">
+            <h2 className="text-4xl font-bold">
 
               No products found 🔍
 
@@ -359,7 +480,7 @@ export default function Home() {
 
         )}
 
-        {/* Products Grid */}
+        {/* Products */}
         {!loading && (
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -367,14 +488,15 @@ export default function Home() {
             {filteredProducts.map((product) => (
 
               <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                image={product.images?.[0]}
-                description={product.description}
-                stock={product.stock}
-              />
+  key={product.id}
+  id={product.id}
+  name={product.name}
+  price={product.price}
+  image={product.images?.[0]}
+  description={product.description}
+  stock={product.stock}
+  badge={product.badge}
+/>
 
             ))}
 
@@ -383,6 +505,8 @@ export default function Home() {
         )}
 
       </section>
+
+      <Footer />
 
     </main>
 

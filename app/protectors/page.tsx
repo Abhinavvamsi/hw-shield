@@ -70,7 +70,7 @@ export default function ProtectorsPage() {
 
         <div className="mb-14">
 
-          <p className="text-zinc-500 uppercase tracking-widest text-sm">
+          <p className="text-red-500 uppercase tracking-widest text-sm">
 
             HW Shield
 
@@ -82,7 +82,7 @@ export default function ProtectorsPage() {
 
           </h1>
 
-          <p className="text-zinc-500 mt-6 text-lg max-w-2xl">
+          <p className="text-red-500 mt-6 text-lg max-w-2xl">
 
             Acrylic and soft protectors designed for serious collectors.
 

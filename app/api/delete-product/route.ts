@@ -1,34 +1,99 @@
 import { prisma } from "@/lib/prisma"
+
 import { NextResponse } from "next/server"
 
-export async function POST(req: Request) {
+import { currentUser } from "@clerk/nextjs/server"
 
-  const { searchParams } =
-    new URL(req.url)
+export async function POST(
+  req: Request
+) {
 
-  const id = searchParams.get("id")
+  try {
 
-  if (!id) {
+    /* Protect API */
+    const user =
+      await currentUser()
+
+    const isAdmin =
+      user?.primaryEmailAddress
+        ?.emailAddress ===
+      "abhinavvamsi2004@gmail.com"
+
+    if (!isAdmin) {
+
+      return NextResponse.json(
+
+        {
+          error: "Unauthorized",
+        },
+
+        {
+          status: 401,
+        }
+
+      )
+
+    }
+
+    /* Get Product ID */
+    const { searchParams } =
+      new URL(req.url)
+
+    const id =
+      searchParams.get("id")
+
+    if (!id) {
+
+      return NextResponse.json(
+
+        {
+          error: "Missing product id",
+        },
+
+        {
+          status: 400,
+        }
+
+      )
+
+    }
+
+    /* Delete Product */
+    await prisma.product.delete({
+
+      where: {
+        id,
+      },
+
+    })
+
+    /* Redirect */
+    return NextResponse.redirect(
+
+      new URL(
+        "/admin/products",
+        req.url
+      )
+
+    )
+
+  } catch (error) {
+
+    console.log(error)
 
     return NextResponse.json(
+
       {
-        error: "Missing product id",
+        error:
+          "Failed to delete product",
       },
+
       {
-        status: 400,
+        status: 500,
       }
+
     )
 
   }
-
-  await prisma.product.delete({
-    where: {
-      id,
-    },
-  })
-
-  return NextResponse.redirect(
-    new URL("/admin/products", req.url)
-  )
 
 }

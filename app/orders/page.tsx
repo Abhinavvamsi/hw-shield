@@ -56,7 +56,7 @@ export default async function OrdersPage() {
 
             </h1>
 
-            <p className="text-zinc-500 mt-4">
+            <p className="text-red-500 mt-4">
 
               Track and manage your purchases.
 
@@ -90,7 +90,7 @@ export default async function OrdersPage() {
 
             </h2>
 
-            <p className="text-zinc-500 mt-4">
+            <p className="text-red-500 mt-4">
 
               Your purchase history will appear here.
 
@@ -115,7 +115,7 @@ export default async function OrdersPage() {
                 {/* LEFT */}
                 <div>
 
-                  <p className="text-zinc-500 text-sm uppercase tracking-widest">
+                  <p className="text-red-500 text-sm uppercase tracking-widest">
 
                     Order ID
 
@@ -127,7 +127,7 @@ export default async function OrdersPage() {
 
                   </h2>
 
-                  <p className="text-zinc-500 mt-6">
+                  <p className="text-red-500 mt-6">
 
                     Payment ID
 
@@ -139,7 +139,7 @@ export default async function OrdersPage() {
 
                   </p>
 
-                  <p className="text-zinc-500 mt-6">
+                  <p className="text-red-500 mt-6">
 
                     Ordered On
 
@@ -186,7 +186,7 @@ export default async function OrdersPage() {
 
         </h3>
 
-        <p className="text-zinc-500 text-sm">
+        <p className="text-red-500 text-sm">
 
           Quantity:
           {" "}
@@ -204,7 +204,7 @@ export default async function OrdersPage() {
                 {/* RIGHT */}
                 <div className="md:text-right">
 
-                  <p className="text-zinc-500">
+                  <p className="text-red-500">
 
                     Total Amount
 

@@ -94,7 +94,7 @@ export default function CheckoutPage() {
 
             </h1>
 
-            <p className="text-zinc-500 mt-4">
+            <p className="text-red-500 mt-4">
 
               Complete your order securely.
 
@@ -252,7 +252,7 @@ export default function CheckoutPage() {
 
                       </h3>
 
-                      <p className="text-zinc-500 text-sm">
+                      <p className="text-red-500 text-sm">
 
                         Premium Hot Wheels Protector
 

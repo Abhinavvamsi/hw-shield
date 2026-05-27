@@ -98,7 +98,7 @@ export default function CartPage() {
               Your Cart
             </h1>
 
-            <p className="text-zinc-500 mt-4">
+            <p className="text-red-500 mt-4">
 
               Review your selected protectors before checkout.
 
@@ -125,7 +125,7 @@ export default function CartPage() {
 
           <div className="text-center py-24">
 
-            <p className="text-zinc-500 text-xl">
+            <p className="text-red-500 text-xl">
               Your cart is empty.
             </p>
 
@@ -172,7 +172,7 @@ export default function CartPage() {
                       {item.name}
                     </h2>
 
-                    <p className="text-zinc-500 mt-2">
+                    <p className="text-red-500 mt-2">
                       ₹{item.price}
                     </p>
 
@@ -269,7 +269,7 @@ export default function CartPage() {
 
               <div>
 
-                <p className="text-zinc-500">
+                <p className="text-red-500">
                   Total
                 </p>
 

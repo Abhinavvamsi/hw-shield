@@ -228,7 +228,7 @@ export default function EditProductForm({
       {/* Update Button */}
       <button
         onClick={handleUpdate}
-        className="w-full h-14 rounded-xl bg-white text-black font-bold hover:scale-[1.02] active:scale-95 transition"
+        className="w-full h-14 rounded-xl bg-red-500 text-white hover:bg-red-600 font-bold hover:scale-[1.02] active:scale-95 transition"
       >
 
         Update Product

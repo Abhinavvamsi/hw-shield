@@ -12,7 +12,7 @@ export default function ThemeToggle() {
       onClick={() =>
         setTheme(theme === "dark" ? "light" : "dark")
       }
-      className="p-2 rounded-xl border border-zinc-700 hover:border-white transition"
+      className="p-2 rounded-xl border border-red-500/40 hover:border-white transition"
     >
 
       {theme === "dark" ? (

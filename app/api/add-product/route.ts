@@ -2,12 +2,36 @@ import { prisma } from "@/lib/prisma"
 
 import { NextResponse } from "next/server"
 
+import { currentUser } from "@clerk/nextjs/server"
+
 export async function POST(
   req: Request
 ) {
 
   try {
+    const user =
+  await currentUser()
 
+const isAdmin =
+  user?.primaryEmailAddress
+    ?.emailAddress ===
+  "abhinavvamsi2004@gmail.com"
+
+if (!isAdmin) {
+
+  return NextResponse.json(
+
+    {
+      error: "Unauthorized",
+    },
+
+    {
+      status: 401,
+    }
+
+  )
+
+}
     const body =
       await req.json()
 
@@ -30,6 +54,9 @@ export async function POST(
 
           category:
             body.category,
+
+          badge: 
+            body.badge,
 
           stock:
             body.stock,

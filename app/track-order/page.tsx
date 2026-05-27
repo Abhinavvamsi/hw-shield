@@ -93,7 +93,7 @@ export default function TrackOrderPage() {
 
           </h1>
 
-          <p className="text-zinc-500 mt-4 text-lg">
+          <p className="text-red-500 mt-4 text-lg">
 
             Enter your Order ID to check your latest order status.
 
@@ -130,7 +130,7 @@ export default function TrackOrderPage() {
               loading ||
               !orderId
             }
-            className="w-full mt-6 h-14 rounded-xl bg-white text-black font-bold hover:scale-[1.02] active:scale-95 transition disabled:opacity-50"
+            className="w-full mt-6 h-14 rounded-xl bg-red-500 text-white hover:bg-red-600 font-bold hover:scale-[1.02] active:scale-95 transition disabled:opacity-50"
           >
 
             {loading
@@ -189,7 +189,7 @@ export default function TrackOrderPage() {
 
               <div>
 
-                <p className="text-zinc-500">
+                <p className="text-red-500">
 
                   Total Amount
 

@@ -80,7 +80,7 @@ export default async function OrdersPage() {
                   <p className="text-xl font-bold">
                     ₹{order.totalAmount}
                   </p>
-                  <p className="text-zinc-500 mt-4">
+                  <p className="text-red-500 mt-4">
 
   Order ID:
   <br />
@@ -92,13 +92,13 @@ export default async function OrdersPage() {
   </span>
 
 </p>
-                  <p className="text-zinc-500 mt-2 break-all">
+                  <p className="text-red-500 mt-2 break-all">
                     Payment ID:
                     <br />
                     {order.paymentId}
                   </p>
 
-                  <p className="text-zinc-500 mt-4">
+                  <p className="text-red-500 mt-4">
                     Ordered On:
                     <br />
                     {new Date(

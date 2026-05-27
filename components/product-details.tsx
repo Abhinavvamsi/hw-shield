@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+
 import { useState } from "react"
 
 import Image from "next/image"
@@ -39,7 +40,7 @@ export default function ProductDetails({
 
       <Navbar />
 
-      <main className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <main className="min-h-screen bg-background text-foreground transition-colors duration-300 pb-32 md:pb-0">
 
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
 
@@ -100,7 +101,7 @@ export default function ProductDetails({
             {/* RIGHT SIDE */}
             <div className="flex flex-col justify-center">
 
-              <p className="text-zinc-500 uppercase tracking-widest text-sm">
+              <p className="text-red-500 uppercase tracking-widest text-sm">
 
                 {product.category}
 
@@ -118,7 +119,7 @@ export default function ProductDetails({
 
               </p>
 
-              <p className="text-zinc-500 mt-8 leading-relaxed text-lg">
+              <p className="text-red-500 mt-8 leading-relaxed text-lg">
 
                 {product.description}
 
@@ -142,7 +143,7 @@ export default function ProductDetails({
               {/* Quantity */}
               <div className="mt-10">
 
-                <p className="text-sm text-zinc-500 mb-4">
+                <p className="text-sm text-red-500 mb-4">
 
                   Quantity
 
@@ -158,7 +159,7 @@ export default function ProductDetails({
                           : 1
                       )
                     }
-                    className="w-12 h-12 rounded-xl border border-zinc-700 text-xl hover:border-white transition"
+                    className="w-12 h-12 rounded-xl border border-red-500/40 text-xl hover:border-white transition"
                   >
 
                     -
@@ -177,7 +178,7 @@ export default function ProductDetails({
                         quantity + 1
                       )
                     }
-                    className="w-12 h-12 rounded-xl border border-zinc-700 text-xl hover:border-white transition"
+                    className="w-12 h-12 rounded-xl border border-red-500/40 text-xl hover:border-white transition"
                   >
 
                     +
@@ -188,8 +189,8 @@ export default function ProductDetails({
 
               </div>
 
-              {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-10">
+              {/* Desktop Buttons */}
+              <div className="hidden md:flex flex-col sm:flex-row gap-4 mt-10">
 
                 {/* Add To Cart */}
                 <Button
@@ -236,7 +237,7 @@ export default function ProductDetails({
                 <Button
                   disabled={product.stock === 0}
                   variant="outline"
-                  className="px-8 py-6 text-lg rounded-xl bg-transparent border-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
+                  className="px-8 py-6 text-lg rounded-xl bg-transparent border-red-500/40 transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
                   onClick={() => {
 
                     for (
@@ -279,6 +280,104 @@ export default function ProductDetails({
             </div>
 
           </div>
+
+        </div>
+
+        {/* Sticky Mobile Buy Bar */}
+        <div
+          className="
+          fixed
+          bottom-0
+          left-0
+          right-0
+          md:hidden
+          z-50
+          border-t
+          border-zinc-800
+          bg-black/95
+          backdrop-blur-xl
+          px-4
+          py-4
+          flex
+          items-center
+          justify-between
+          gap-4
+          "
+        >
+
+          {/* Price */}
+          <div>
+
+            <p className="text-xs text-zinc-400">
+
+              Price
+
+            </p>
+
+            <h3 className="text-2xl font-bold text-white">
+
+              ₹{product.price}
+
+            </h3>
+
+          </div>
+
+          {/* Add To Cart */}
+          <button
+            disabled={product.stock === 0}
+
+            onClick={() => {
+
+              for (
+                let i = 0;
+                i < quantity;
+                i++
+              ) {
+
+                addToCart({
+
+                  id: product.id,
+
+                  name: product.name,
+
+                  price: product.price,
+
+                  image:
+                    product.images[0],
+
+                  stock:
+                    product.stock,
+
+                })
+
+              }
+
+              toast.success(
+                "Added to cart 🛒"
+              )
+
+            }}
+
+            className="
+            flex-1
+            h-14
+            rounded-2xl
+            bg-red-500
+            hover:bg-red-600
+            text-white
+            font-bold
+            text-lg
+            transition-all
+            duration-300
+            disabled:opacity-50
+            "
+          >
+
+            {product.stock === 0
+              ? "Out of Stock"
+              : "Add To Cart"}
+
+          </button>
 
         </div>
 

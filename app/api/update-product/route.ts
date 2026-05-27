@@ -1,10 +1,41 @@
 import { prisma } from "@/lib/prisma"
+
 import { NextResponse } from "next/server"
 
-export async function POST(req: Request) {
+import { currentUser } from "@clerk/nextjs/server"
+
+export async function POST(
+  req: Request
+) {
 
   try {
 
+    /* Protect API */
+    const user =
+      await currentUser()
+
+    const isAdmin =
+      user?.primaryEmailAddress
+        ?.emailAddress ===
+      "abhinavvamsi2004@gmail.com"
+
+    if (!isAdmin) {
+
+      return NextResponse.json(
+
+        {
+          error: "Unauthorized",
+        },
+
+        {
+          status: 401,
+        }
+
+      )
+
+    }
+
+    /* Get Product ID */
     const { searchParams } =
       new URL(req.url)
 
@@ -14,32 +45,56 @@ export async function POST(req: Request) {
     if (!id) {
 
       return NextResponse.json(
+
         {
           error: "Missing product id",
         },
+
         {
           status: 400,
         }
+
       )
 
     }
 
-    const body = await req.json()
+    /* Request Body */
+    const body =
+      await req.json()
 
+    /* Update Product */
     const updatedProduct =
       await prisma.product.update({
+
         where: {
           id,
         },
 
         data: {
-  name: body.name,
-  description: body.description,
-  price: body.price,
-  images: body.images,
-  category: body.category,
-  stock: body.stock,
-},
+
+          name:
+            body.name,
+
+          description:
+            body.description,
+
+          price:
+            body.price,
+
+          images:
+            body.images,
+
+          category:
+            body.category,
+
+          badge:
+            body.badge,
+
+          stock:
+            body.stock,
+
+        },
+
       })
 
     return NextResponse.json(
@@ -48,14 +103,19 @@ export async function POST(req: Request) {
 
   } catch (error) {
 
+    console.log(error)
+
     return NextResponse.json(
+
       {
         error:
           "Failed to update product",
       },
+
       {
         status: 500,
       }
+
     )
 
   }

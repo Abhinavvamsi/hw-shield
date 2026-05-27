@@ -12,12 +12,57 @@ import {
   ThemeProvider,
 } from "@/components/theme-provider"
 
+import {
+  Bebas_Neue,
+} from "next/font/google"
+
+const bebas = Bebas_Neue({
+
+  subsets: ["latin"],
+
+  weight: "400",
+
+})
+
 export const metadata: Metadata = {
 
-  title: "HW Shield",
+  title:
+    "Diecast Protectors | Premium Hot Wheels Protectors & Diecast Cars",
 
   description:
-    "Premium Hot Wheels Protectors",
+    "Shop premium Hot Wheels protectors, acrylic cases and collectible diecast cars for passionate collectors.",
+
+  keywords: [
+    "Hot Wheels",
+    "Diecast Cars",
+    "Protectors",
+    "Hot Wheels Protectors",
+    "Mini GT",
+    "Tomica",
+    "Diecast Collection",
+  ],
+
+  openGraph: {
+
+    title:
+      "Diecast Protectors",
+
+    description:
+      "Premium diecast cars and Hot Wheels protectors.",
+
+    url:
+      "https://diecastprotectors.in",
+
+    siteName:
+      "Diecast Protectors",
+
+    locale:
+      "en_IN",
+
+    type:
+      "website",
+
+  },
 
 }
 
@@ -34,7 +79,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
 
-      <body>
+      <body
+        className={bebas.className}
+      >
 
         {/* Razorpay */}
         <Script

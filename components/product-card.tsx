@@ -28,6 +28,8 @@ type ProductCardProps = {
 
   stock: number
 
+  badge?: string
+
 }
 
 export default function ProductCard({
@@ -44,6 +46,8 @@ export default function ProductCard({
 
   stock,
 
+  badge,
+
 }: ProductCardProps) {
 
   const addToCart =
@@ -59,7 +63,22 @@ export default function ProductCard({
 
     <Link href={`/products/${id}`}>
 
-      <div className="group bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 hover:border-zinc-500 hover:-translate-y-3 hover:shadow-2xl transition-all duration-500 cursor-pointer">
+      <div
+        className="
+        group
+        bg-zinc-900
+        rounded-3xl
+        overflow-hidden
+        border
+        border-zinc-800
+        hover:border-red-500/40
+        hover:-translate-y-2
+        hover:shadow-[0_0_40px_rgba(239,68,68,0.12)]
+        transition-all
+        duration-500
+        cursor-pointer
+        "
+      >
 
         {/* Product Image */}
         <div className="relative h-72 overflow-hidden">
@@ -68,32 +87,126 @@ export default function ProductCard({
             src={image}
             alt={name}
             fill
-            className="object-cover group-hover:scale-110 transition duration-700"
+            className="
+            object-cover
+            group-hover:scale-110
+            transition-transform
+            duration-700
+            "
           />
 
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
+          <div
+            className="
+            absolute
+            inset-0
+            bg-gradient-to-t
+            from-black/70
+            to-transparent
+            opacity-0
+            group-hover:opacity-100
+            transition
+            duration-500
+            "
+          />
+
+          {/* Dynamic Badge */}
+          {badge && (
+
+            <div
+              className="
+              absolute
+              top-4
+              left-4
+              px-3
+              py-1
+              rounded-full
+              bg-red-500
+              text-white
+              text-xs
+              font-bold
+              tracking-wider
+              shadow-lg
+              "
+            >
+
+              {badge}
+
+            </div>
+
+          )}
+
+          {/* Low Stock Badge */}
+          {stock > 0 && stock <= 3 && (
+
+            <div
+              className="
+              absolute
+              top-4
+              right-4
+              px-3
+              py-1
+              rounded-full
+              bg-orange-500
+              text-white
+              text-xs
+              font-bold
+              shadow-lg
+              "
+            >
+
+              LOW STOCK
+
+            </div>
+
+          )}
+
+          {/* Out of Stock */}
+          {stock === 0 && (
+
+            <div
+              className="
+              absolute
+              top-4
+              right-4
+              px-3
+              py-1
+              rounded-full
+              bg-zinc-800
+              text-white
+              text-xs
+              font-bold
+              shadow-lg
+              "
+            >
+
+              SOLD OUT
+
+            </div>
+
+          )}
 
         </div>
 
         {/* Product Info */}
         <div className="p-6">
 
-          <h3 className="text-2xl font-bold">
+          <h3 className="text-2xl font-bold text-white">
 
             {name}
 
           </h3>
 
-          <p className="text-zinc-500 mt-3 leading-relaxed">
+          <p className="text-zinc-400 mt-3 leading-relaxed line-clamp-2">
 
             {description}
 
           </p>
 
+          {/* Price */}
           <div className="flex items-center justify-between mt-8">
 
-            <p className="text-3xl font-bold">
+            <p className="text-3xl font-bold text-white">
 
               ₹{price}
 
@@ -101,7 +214,7 @@ export default function ProductCard({
 
           </div>
 
-          {/* Stock Status */}
+          {/* Stock */}
           <p
             className={`mt-4 font-medium ${
               stock > 0
@@ -129,11 +242,14 @@ export default function ProductCard({
               rounded-xl
               text-base
               font-semibold
-              transition-all
-              duration-300
+              bg-red-500
+              hover:bg-red-600
               hover:scale-105
               hover:shadow-lg
+              hover:shadow-red-500/20
               active:scale-95
+              transition-all
+              duration-300
               disabled:opacity-50
               disabled:cursor-not-allowed
               "
@@ -193,7 +309,8 @@ export default function ProductCard({
               rounded-xl
               text-base
               font-semibold
-              border-zinc-700
+              border-red-500/40
+              bg-transparent
               hover:bg-white
               hover:text-black
               hover:scale-105

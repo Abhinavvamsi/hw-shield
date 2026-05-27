@@ -1,6 +1,10 @@
 import cloudinary from "@/lib/cloudinary"
 
-import { NextResponse } from "next/server"
+import { NextResponse }
+from "next/server"
+
+import { currentUser }
+from "@clerk/nextjs/server"
 
 export async function POST(
   req: Request
@@ -8,6 +12,33 @@ export async function POST(
 
   try {
 
+    /* Protect API */
+    const user =
+      await currentUser()
+
+    const isAdmin =
+      user?.primaryEmailAddress
+        ?.emailAddress ===
+      "abhinavvamsi2004@gmail.com"
+
+    if (!isAdmin) {
+
+      return NextResponse.json(
+
+        {
+          error:
+            "Unauthorized",
+        },
+
+        {
+          status: 401,
+        }
+
+      )
+
+    }
+
+    /* Get File */
     const formData =
       await req.formData()
 
@@ -17,16 +48,21 @@ export async function POST(
     if (!file) {
 
       return NextResponse.json(
+
         {
-          error: "No file uploaded",
+          error:
+            "No file uploaded",
         },
+
         {
           status: 400,
         }
+
       )
 
     }
 
+    /* Convert File */
     const bytes =
       await file.arrayBuffer()
 
@@ -36,29 +72,41 @@ export async function POST(
     const base64 =
       `data:${file.type};base64,${buffer.toString("base64")}`
 
+    /* Upload to Cloudinary */
     const uploadedImage =
       await cloudinary.uploader.upload(
+
         base64,
+
         {
-          folder: "hw-shield",
+          folder:
+            "hw-shield",
         }
+
       )
 
     return NextResponse.json({
+
       imageUrl:
         uploadedImage.secure_url,
+
     })
 
   } catch (error) {
 
+    console.log(error)
+
     return NextResponse.json(
+
       {
         error:
           "Image upload failed",
       },
+
       {
         status: 500,
       }
+
     )
 
   }

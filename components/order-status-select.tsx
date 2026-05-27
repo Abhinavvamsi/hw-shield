@@ -62,7 +62,7 @@ OrderStatusSelect({
         )
       }
 
-      className="mt-6 bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white"
+      className="mt-6 bg-black border border-red-500/40 rounded-xl px-4 py-3 text-white"
     >
 
       <option value="Pending">

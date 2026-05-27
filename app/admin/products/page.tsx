@@ -75,7 +75,7 @@ export default async function ProductsPage() {
               {/* Content */}
               <div className="p-6">
 
-                <p className="text-zinc-500 text-sm uppercase">
+                <p className="text-red-500 text-sm uppercase">
 
                   {product.category}
 

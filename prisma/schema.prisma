@@ -56,4 +56,6 @@ model Product {
 
   createdAt   DateTime @default(now())
 
+  badge       String?
+
 }

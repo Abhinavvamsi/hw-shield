@@ -53,7 +53,7 @@ export default function SuccessPage() {
           {/* Order ID */}
           <div className="mt-10 bg-black border border-zinc-800 rounded-2xl p-6">
 
-            <p className="text-zinc-500 text-sm uppercase tracking-widest">
+            <p className="text-red-500 text-sm uppercase tracking-widest">
 
               Order ID
 
