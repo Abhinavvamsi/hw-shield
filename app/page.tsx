@@ -11,13 +11,21 @@ import ProductCard from "@/components/product-card"
 import Navbar from "@/components/navbar"
 
 type Product = {
+
   id: string
+
   name: string
+
   description: string
+
   price: number
-  image: string
+
+  images: string[]
+
   category: string
+
   stock: number
+
 }
 
 export default function Home() {
@@ -27,45 +35,73 @@ export default function Home() {
       (state) => state.syncStock
     )
 
-  const [products, setProducts] =
-    useState<Product[]>([])
+  const [products,
+    setProducts
+  ] = useState<Product[]>([])
+
+  const [loading,
+    setLoading
+  ] = useState(true)
 
   const [selectedCategory,
     setSelectedCategory
   ] = useState("All")
 
+  const [search,
+    setSearch
+  ] = useState("")
+
   useEffect(() => {
 
     async function fetchProducts() {
 
-      const response = await fetch(
-        "/api/get-products",
-        {
-          cache: "no-store",
-        }
-      )
+      try {
 
-      const data =
-        await response.json()
-
-      setProducts(data)
-
-      data.forEach(
-        (product: Product) => {
-
-          syncStock(
-            product.id,
-            product.stock
+        const response =
+          await fetch(
+            "/api/get-products",
+            {
+              cache: "no-store",
+            }
           )
 
-        }
-      )
+        const data =
+          await response.json()
+
+        /* Small delay for smooth skeleton animation */
+        await new Promise(
+          (resolve) =>
+            setTimeout(resolve, 1200)
+        )
+
+        setProducts(data)
+
+        data.forEach(
+          (product: Product) => {
+
+            syncStock(
+              product.id,
+              product.stock
+            )
+
+          }
+        )
+
+      } catch (error) {
+
+        console.log(error)
+
+      } finally {
+
+        setLoading(false)
+
+      }
 
     }
 
     fetchProducts()
 
-  }, [])
+  }, [syncStock])
 
   const categories = [
 
@@ -81,22 +117,43 @@ export default function Home() {
   ]
 
   const filteredProducts =
+    products.filter((product) => {
 
-    selectedCategory === "All"
+      const matchesCategory =
 
-      ? products
+        selectedCategory === "All"
 
-      : products.filter(
-          (product) =>
-            product.category ===
+          ? true
+
+          : product.category ===
             selectedCategory
-        )
+
+      const matchesSearch =
+
+        product.name
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+
+        product.description
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+
+      return (
+        matchesCategory &&
+        matchesSearch
+      )
+
+    })
 
   return (
 
     <main className="min-h-screen bg-gradient-to-b from-background via-background to-background text-foreground transition-colors duration-300">
 
-      {/* Global Navbar */}
+      {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
@@ -106,57 +163,56 @@ export default function Home() {
 
           <p className="text-zinc-500 uppercase tracking-widest text-sm md:text-base">
 
-            Premium Protection
+            Premium Diecast & Protection
 
           </p>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mt-4">
 
-            Protect Your
+            Premium
 
             <span className="text-zinc-500 dark:text-zinc-400">
 
-              {" "}Hot Wheels{" "}
+              {" "}Diecast Cars{" "}
 
             </span>
 
-            Collection
+            & Protectors
 
           </h1>
 
           <p className="text-zinc-500 text-base md:text-lg mt-6 max-w-xl leading-relaxed">
 
-            Premium acrylic and soft protectors built for collectors who value condition and display quality.
+            Discover premium Hot Wheels, collectible diecast cars, acrylic cases and soft protectors built for passionate collectors.
 
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-10">
 
-            <a href="#products">
+  <a href="/protectors">
 
-              <Button className="rounded-xl px-8 py-6 text-lg">
+    <Button className="rounded-xl px-8 py-6 text-lg hover:scale-105 active:scale-95 transition-all duration-300">
 
-                Shop Now
+      Protectors
 
-              </Button>
+    </Button>
 
-            </a>
+  </a>
 
-            <a href="#products">
+  <a href="/cars">
 
-              <Button
-                variant="outline"
-                className="rounded-xl px-8 py-6 text-lg bg-transparent border-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-900"
-              >
+    <Button
+      variant="outline"
+      className="rounded-xl px-8 py-6 text-lg bg-transparent border-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-900 hover:scale-105 active:scale-95 transition-all duration-300"
+    >
 
-                View Collection
+      Diecast Cars
 
-              </Button>
+    </Button>
 
-            </a>
+  </a>
 
-          </div>
-
+</div>
         </div>
 
       </section>
@@ -167,6 +223,7 @@ export default function Home() {
         className="max-w-7xl mx-auto px-4 md:px-6 pb-20"
       >
 
+        {/* Section Header */}
         <div className="mb-10">
 
           <p className="text-zinc-500 uppercase tracking-widest text-sm">
@@ -180,6 +237,37 @@ export default function Home() {
             Collector Favorites
 
           </h2>
+
+        </div>
+
+        {/* Search */}
+        <div className="mb-8">
+
+          <input
+            type="text"
+            placeholder="Search diecast cars & protectors..."
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+            className="
+            w-full
+            h-14
+            rounded-2xl
+            bg-zinc-900
+            border
+            border-zinc-800
+            px-5
+            text-white
+            placeholder:text-zinc-500
+            outline-none
+            focus:border-white
+            transition-all
+            duration-300
+            "
+          />
 
         </div>
 
@@ -208,24 +296,91 @@ export default function Home() {
 
         </div>
 
+        {/* Skeleton Loader */}
+        {loading && (
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {[...Array(6)].map((_, i) => (
+
+              <div
+                key={i}
+                className="
+                animate-pulse
+                rounded-3xl
+                overflow-hidden
+                border
+                border-zinc-800
+                bg-zinc-900
+                "
+              >
+
+                <div className="h-72 bg-zinc-800" />
+
+                <div className="p-6 space-y-4">
+
+                  <div className="h-6 bg-zinc-800 rounded w-2/3" />
+
+                  <div className="h-4 bg-zinc-800 rounded w-full" />
+
+                  <div className="h-4 bg-zinc-800 rounded w-5/6" />
+
+                  <div className="h-10 bg-zinc-800 rounded-xl mt-6" />
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
+
+        {/* Empty State */}
+        {!loading &&
+          filteredProducts.length === 0 && (
+
+          <div className="text-center py-24">
+
+            <h2 className="text-3xl font-bold">
+
+              No products found 🔍
+
+            </h2>
+
+            <p className="text-zinc-500 mt-4">
+
+              Try searching something else
+
+            </p>
+
+          </div>
+
+        )}
+
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        {!loading && (
 
-          {filteredProducts.map((product) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              price={product.price}
-              image={product.image}
-              description={product.description}
-              stock={product.stock}
-            />
+            {filteredProducts.map((product) => (
 
-          ))}
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                image={product.images?.[0]}
+                description={product.description}
+                stock={product.stock}
+              />
 
-        </div>
+            ))}
+
+          </div>
+
+        )}
 
       </section>
 

@@ -1,34 +1,55 @@
 "use client"
 
 import Link from "next/link"
+
 import Image from "next/image"
+
 import { Button } from "@/components/ui/button"
+
 import { useCartStore } from "@/store/cart-store"
+
 import { useRouter } from "next/navigation"
+
 import { useUser } from "@clerk/nextjs"
+
 import { toast } from "sonner"
 
 type ProductCardProps = {
+
   id: string
+
   name: string
+
   price: number
+
   image: string
+
   description: string
+
   stock: number
+
 }
 
 export default function ProductCard({
+
   id,
+
   name,
+
   price,
+
   image,
+
   description,
+
   stock,
+
 }: ProductCardProps) {
 
-  const addToCart = useCartStore(
-    (state) => state.addToCart
-  )
+  const addToCart =
+    useCartStore(
+      (state) => state.addToCart
+    )
 
   const router = useRouter()
 
@@ -59,17 +80,23 @@ export default function ProductCard({
         <div className="p-6">
 
           <h3 className="text-2xl font-bold">
+
             {name}
+
           </h3>
 
           <p className="text-zinc-500 mt-3 leading-relaxed">
+
             {description}
+
           </p>
 
           <div className="flex items-center justify-between mt-8">
 
             <p className="text-3xl font-bold">
+
               ₹{price}
+
             </p>
 
           </div>
@@ -95,12 +122,31 @@ export default function ProductCard({
             {/* Add to Cart */}
             <Button
               disabled={stock === 0}
-              className="flex-1 h-12 rounded-xl text-base font-semibold transition-all duration-150 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+
+              className="
+              flex-1
+              h-12
+              rounded-xl
+              text-base
+              font-semibold
+              transition-all
+              duration-300
+              hover:scale-105
+              hover:shadow-lg
+              active:scale-95
+              disabled:opacity-50
+              disabled:cursor-not-allowed
+              "
+
               onClick={(e) => {
 
                 e.preventDefault()
 
                 if (!user) {
+
+                  toast.error(
+                    "Please login first"
+                  )
 
                   router.push("/sign-in")
 
@@ -109,30 +155,65 @@ export default function ProductCard({
                 }
 
                 addToCart({
+
                   id,
+
                   name,
+
                   price,
+
                   image,
+
                   stock,
+
                 })
+
+                toast.success(
+                  `${name} added to cart 🛒`
+                )
 
               }}
             >
 
-              Add to Cart
+              {stock === 0
+                ? "Out of Stock"
+                : "Add to Cart"}
 
             </Button>
 
             {/* Buy Now */}
             <Button
               disabled={stock === 0}
+
               variant="outline"
-              className="flex-1 h-12 rounded-xl text-base font-semibold border-zinc-700 hover:bg-white hover:text-black transition-all duration-150 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+
+              className="
+              flex-1
+              h-12
+              rounded-xl
+              text-base
+              font-semibold
+              border-zinc-700
+              hover:bg-white
+              hover:text-black
+              hover:scale-105
+              hover:shadow-lg
+              active:scale-95
+              transition-all
+              duration-300
+              disabled:opacity-50
+              disabled:cursor-not-allowed
+              "
+
               onClick={(e) => {
 
                 e.preventDefault()
 
                 if (!user) {
+
+                  toast.error(
+                    "Please login first"
+                  )
 
                   router.push("/sign-in")
 
@@ -141,19 +222,31 @@ export default function ProductCard({
                 }
 
                 addToCart({
-  id,
-  name,
-  price,
-  image,
-  stock,
-})
+
+                  id,
+
+                  name,
+
+                  price,
+
+                  image,
+
+                  stock,
+
+                })
+
+                toast.success(
+                  "Redirecting to checkout 🚀"
+                )
 
                 router.push("/checkout")
 
               }}
             >
 
-              Buy Now
+              {stock === 0
+                ? "Unavailable"
+                : "Buy Now"}
 
             </Button>
 
@@ -166,4 +259,5 @@ export default function ProductCard({
     </Link>
 
   )
+
 }

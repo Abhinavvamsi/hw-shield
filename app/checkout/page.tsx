@@ -27,12 +27,6 @@ export default function CheckoutPage() {
 
   const { user } = useUser()
 
-  if (!user) {
-
-    return <RedirectToSignIn />
-
-  }
-
   const total = cart.reduce(
     (sum, item) =>
       sum +
@@ -44,13 +38,13 @@ export default function CheckoutPage() {
   const [customer,
     setCustomer
   ] = useState(
-    user.fullName || ""
+    user?.fullName || ""
   )
 
   const [email,
     setEmail
   ] = useState(
-    user.primaryEmailAddress
+    user?.primaryEmailAddress
       ?.emailAddress || ""
   )
 
@@ -70,11 +64,21 @@ export default function CheckoutPage() {
     setPincode
   ] = useState("")
 
+  const [loading,
+    setLoading
+  ] = useState(false)
+
+  if (!user) {
+
+    return <RedirectToSignIn />
+
+  }
+
   return (
 
     <main className="min-h-screen bg-background text-foreground">
 
-      {/* Global Navbar */}
+      {/* Navbar */}
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
@@ -299,9 +303,22 @@ export default function CheckoutPage() {
 
               </div>
 
-              {/* Pay Button */}
+              {/* Payment Button */}
               <Button
-                className="w-full h-14 rounded-xl text-lg mt-10 active:scale-95 transition"
+                disabled={loading}
+                className="
+                w-full
+                h-14
+                rounded-xl
+                text-lg
+                mt-10
+                transition-all
+                duration-300
+                hover:scale-[1.02]
+                active:scale-95
+                disabled:opacity-60
+                disabled:cursor-not-allowed
+                "
                 onClick={async () => {
 
                   if (
@@ -321,134 +338,195 @@ export default function CheckoutPage() {
 
                   }
 
-                  const response =
-                    await fetch(
-                      "/api/create-order",
-                      {
-                        method: "POST",
+                  try {
 
-                        headers: {
-                          "Content-Type":
-                            "application/json",
+                    setLoading(true)
+
+                    const response =
+                      await fetch(
+                        "/api/create-order",
+                        {
+
+                          method: "POST",
+
+                          headers: {
+                            "Content-Type":
+                              "application/json",
+                          },
+
+                          body: JSON.stringify({
+
+                            amount:
+                              total + 49,
+
+                          }),
+
+                        }
+                      )
+
+                    const order =
+                      await response.json()
+
+                    const options = {
+
+                      key:
+                        process.env
+                          .NEXT_PUBLIC_RAZORPAY_KEY_ID,
+
+                      amount:
+                        order.amount,
+
+                      currency:
+                        order.currency,
+
+                      name:
+                        "HW Shield",
+
+                      description:
+                        "Hot Wheels Protector Purchase",
+
+                      order_id:
+                        order.id,
+
+                      handler:
+                        async function (
+                          response: any
+                        ) {
+
+                          try {
+
+                            const saveOrderResponse =
+                              await fetch(
+                                "/api/save-order",
+                                {
+
+                                  method:
+                                    "POST",
+
+                                  headers: {
+                                    "Content-Type":
+                                      "application/json",
+                                  },
+
+                                  body:
+                                    JSON.stringify({
+
+                                      userId:
+                                        user.id,
+
+                                      customer,
+
+                                      email,
+
+                                      phone,
+
+                                      address,
+
+                                      city,
+
+                                      pincode,
+
+                                      products:
+                                        cart,
+
+                                      totalAmount:
+                                        total + 49,
+
+                                      paymentId:
+                                        response
+                                          .razorpay_payment_id,
+
+                                    }),
+
+                                }
+                              )
+
+                            const savedOrder =
+                              await saveOrderResponse.json()
+
+                            toast.success(
+                              "Payment successful 🎉"
+                            )
+
+                            useCartStore
+                              .getState()
+                              .clearCart()
+
+                            window.location.href =
+                              `/success?orderId=${savedOrder.orderId}`
+
+                          } catch (error) {
+
+                            toast.error(
+                              "Failed to save order"
+                            )
+
+                            setLoading(false)
+
+                          }
+
                         },
 
-                        body: JSON.stringify({
+                      modal: {
 
-                          amount:
-                            total + 49,
+                        ondismiss: function () {
 
-                        }),
+                          setLoading(false)
+
+                          toast.error(
+                            "Payment cancelled"
+                          )
+
+                        },
+
+                      },
+
+                      theme: {
+                        color:
+                          "#000000",
+                      },
+
+                    }
+
+                    const razorpay =
+                      new (
+                        window as any
+                      ).Razorpay(
+                        options
+                      )
+
+                    razorpay.open()
+
+                    razorpay.on(
+                      "payment.failed",
+
+                      function () {
+
+                        toast.error(
+                          "Payment failed"
+                        )
+
+                        setLoading(false)
 
                       }
                     )
 
-                  const order =
-                    await response.json()
+                  } catch (error) {
 
-                  const options = {
-
-                    key:
-                      process.env
-                        .NEXT_PUBLIC_RAZORPAY_KEY_ID,
-
-                    amount:
-                      order.amount,
-
-                    currency:
-                      order.currency,
-
-                    name:
-                      "HW Shield",
-
-                    description:
-                      "Hot Wheels Protector Purchase",
-
-                    order_id:
-                      order.id,
-
-                    handler:
-                      async function (
-                        response: any
-                      ) {
-
-                        const saveOrderResponse =
-                          await fetch(
-                            "/api/save-order",
-                            {
-
-                              method:
-                                "POST",
-
-                              headers: {
-                                "Content-Type":
-                                  "application/json",
-                              },
-
-                              body:
-                                JSON.stringify({
-
-                                  userId:
-                                    user.id,
-
-                                  customer,
-
-                                  email,
-
-                                  phone,
-
-                                  address,
-
-                                  city,
-
-                                  pincode,
-
-                                  products:
-                                    cart,
-
-                                  totalAmount:
-                                    total + 49,
-
-                                  paymentId:
-                                    response
-                                      .razorpay_payment_id,
-
-                                }),
-
-                            }
-                          )
-
-                        const savedOrder =
-                          await saveOrderResponse.json()
-
-                        useCartStore
-                          .getState()
-                          .clearCart()
-
-                        window.location.href =
-                          `/success?orderId=${savedOrder.orderId}`
-
-                      },
-
-                    theme: {
-                      color:
-                        "#000000",
-                    },
-
-                  }
-
-                  const razorpay =
-                    new (
-                      window as any
-                    ).Razorpay(
-                      options
+                    toast.error(
+                      "Something went wrong"
                     )
 
-                  razorpay.open()
+                    setLoading(false)
+
+                  }
 
                 }}
               >
 
-                Proceed to Payment
+                {loading
+                  ? "Processing Payment..."
+                  : "Proceed to Payment"}
 
               </Button>
 

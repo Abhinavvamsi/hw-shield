@@ -5,6 +5,7 @@ import Link from "next/link"
 import {
   Menu,
   X,
+  ShoppingCart,
 } from "lucide-react"
 
 import {
@@ -40,6 +41,10 @@ export default function Navbar() {
     setMobileMenuOpen
   ] = useState(false)
 
+  const [animateCart,
+    setAnimateCart
+  ] = useState(false)
+
   const isAdmin =
     user?.primaryEmailAddress
       ?.emailAddress ===
@@ -71,6 +76,27 @@ export default function Navbar() {
     )
 
   }, [user, clearCart])
+
+  /* Cart animation */
+  useEffect(() => {
+
+    if (cart.length > 0) {
+
+      setAnimateCart(true)
+
+      const timer =
+        setTimeout(() => {
+
+          setAnimateCart(false)
+
+        }, 400)
+
+      return () =>
+        clearTimeout(timer)
+
+    }
+
+  }, [cart.length])
 
   return (
 
@@ -127,12 +153,54 @@ export default function Navbar() {
 
           </Link>
 
+          {/* Cart Icon */}
           <Link
             href="/cart"
-            className="hover:text-white transition"
+            className="relative hover:text-white transition"
           >
 
-            Cart ({cart.length})
+            <div
+              className={`
+              relative
+              transition-all
+              duration-300
+              ${animateCart
+                ? "scale-125"
+                : "scale-100"}
+              `}
+            >
+
+              <ShoppingCart size={26} />
+
+              {cart.length > 0 && (
+
+                <span
+                  className="
+                  absolute
+                  -top-2
+                  -right-2
+                  min-w-[20px]
+                  h-5
+                  px-1
+                  rounded-full
+                  bg-white
+                  text-black
+                  text-xs
+                  font-bold
+                  flex
+                  items-center
+                  justify-center
+                  animate-pulse
+                  "
+                >
+
+                  {cart.length}
+
+                </span>
+
+              )}
+
+            </div>
 
           </Link>
 
@@ -173,6 +241,57 @@ export default function Navbar() {
 
         {/* Mobile */}
         <div className="md:hidden flex items-center gap-4">
+
+          {/* Mobile Cart */}
+          <Link
+            href="/cart"
+            className="relative"
+          >
+
+            <div
+              className={`
+              relative
+              transition-all
+              duration-300
+              ${animateCart
+                ? "scale-125"
+                : "scale-100"}
+              `}
+            >
+
+              <ShoppingCart size={24} />
+
+              {cart.length > 0 && (
+
+                <span
+                  className="
+                  absolute
+                  -top-2
+                  -right-2
+                  min-w-[18px]
+                  h-5
+                  px-1
+                  rounded-full
+                  bg-white
+                  text-black
+                  text-xs
+                  font-bold
+                  flex
+                  items-center
+                  justify-center
+                  animate-pulse
+                  "
+                >
+
+                  {cart.length}
+
+                </span>
+
+              )}
+
+            </div>
+
+          </Link>
 
           <ThemeToggle />
 
@@ -234,15 +353,6 @@ export default function Navbar() {
           >
 
             My Orders
-
-          </Link>
-
-          <Link
-            href="/cart"
-            className="block text-lg"
-          >
-
-            Cart ({cart.length})
 
           </Link>
 

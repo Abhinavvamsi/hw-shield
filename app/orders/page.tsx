@@ -168,7 +168,10 @@ export default async function OrdersPage() {
       <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-black">
 
         <img
-          src={product.image}
+          src={
+  product.images?.[0] ||
+  product.image
+}
           alt={product.name}
           className="w-full h-full object-cover"
         />

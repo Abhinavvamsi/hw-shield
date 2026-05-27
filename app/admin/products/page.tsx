@@ -52,7 +52,7 @@ export default async function ProductsPage() {
               <div className="relative h-72">
 
                 <Image
-                  src={product.image}
+                  src={product.images?.[0]}
                   alt={product.name}
                   fill
                   className="object-cover"

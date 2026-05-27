@@ -32,7 +32,7 @@ export default function EditProductForm({
     useState(product.price)
 
   const [image, setImage] =
-    useState(product.image)
+    useState(product.images[0])
 
   const [category, setCategory] =
     useState(product.category)
