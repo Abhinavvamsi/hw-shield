@@ -132,6 +132,7 @@ export default function CheckoutPage() {
 
               <div className="space-y-6">
 
+                {/* Full Name */}
                 <input
                   type="text"
                   placeholder="Full Name"
@@ -141,9 +142,10 @@ export default function CheckoutPage() {
                       e.target.value
                     )
                   }
-                  className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
+                  className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-red-500 transition"
                 />
 
+                {/* Email */}
                 <input
                   type="email"
                   placeholder="Email Address"
@@ -153,21 +155,25 @@ export default function CheckoutPage() {
                       e.target.value
                     )
                   }
-                  className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
+                  className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-red-500 transition"
                 />
 
+                {/* Phone */}
                 <input
-                  type="text"
+                  type="tel"
+                  inputMode="numeric"
+                  maxLength={10}
                   placeholder="Phone Number"
                   value={phone}
                   onChange={(e) =>
                     setPhone(
-                      e.target.value
+                      e.target.value.replace(/\D/g, "")
                     )
                   }
-                  className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
+                  className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-red-500 transition"
                 />
 
+                {/* Address */}
                 <textarea
                   placeholder="Full Address"
                   value={address}
@@ -176,11 +182,12 @@ export default function CheckoutPage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-xl bg-black border border-zinc-800 px-4 py-4 outline-none focus:border-white transition min-h-[120px]"
+                  className="w-full rounded-xl bg-black border border-zinc-800 px-4 py-4 outline-none focus:border-red-500 transition min-h-[120px]"
                 />
 
                 <div className="grid grid-cols-2 gap-4">
 
+                  {/* City */}
                   <input
                     type="text"
                     placeholder="City"
@@ -190,19 +197,22 @@ export default function CheckoutPage() {
                         e.target.value
                       )
                     }
-                    className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
+                    className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-red-500 transition"
                   />
 
+                  {/* Pincode */}
                   <input
-                    type="text"
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={6}
                     placeholder="Pincode"
                     value={pincode}
                     onChange={(e) =>
                       setPincode(
-                        e.target.value
+                        e.target.value.replace(/\D/g, "")
                       )
                     }
-                    className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-white transition"
+                    className="w-full h-14 rounded-xl bg-black border border-zinc-800 px-4 outline-none focus:border-red-500 transition"
                   />
 
                 </div>
@@ -321,17 +331,74 @@ export default function CheckoutPage() {
                 "
                 onClick={async () => {
 
-                  if (
-                    !customer ||
-                    !email ||
-                    !phone ||
-                    !address ||
-                    !city ||
-                    !pincode
-                  ) {
+                  /* Validation */
+
+                  if (customer.trim().length < 3) {
 
                     toast.error(
-                      "Please fill all fields"
+                      "Enter valid full name"
+                    )
+
+                    return
+
+                  }
+
+                  const emailRegex =
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+                  if (!emailRegex.test(email)) {
+
+                    toast.error(
+                      "Enter valid email"
+                    )
+
+                    return
+
+                  }
+
+                  const phoneRegex =
+                    /^[6-9]\d{9}$/
+
+                  if (!phoneRegex.test(phone)) {
+
+                    toast.error(
+                      "Enter valid 10-digit phone number"
+                    )
+
+                    return
+
+                  }
+
+                  if (address.trim().length < 10) {
+
+                    toast.error(
+                      "Enter complete address"
+                    )
+
+                    return
+
+                  }
+
+                  const cityRegex =
+                    /^[A-Za-z\s]+$/
+
+                  if (!cityRegex.test(city)) {
+
+                    toast.error(
+                      "Enter valid city"
+                    )
+
+                    return
+
+                  }
+
+                  const pincodeRegex =
+                    /^\d{6}$/
+
+                  if (!pincodeRegex.test(pincode)) {
+
+                    toast.error(
+                      "Enter valid 6-digit pincode"
                     )
 
                     return
